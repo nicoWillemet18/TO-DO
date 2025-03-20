@@ -1,0 +1,28 @@
+.containerHeader {
+    position: relative;
+    height: 9vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.videoBackground {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+.containerTitleHeader {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: aliceblue;
+    letter-spacing: 1px;
+    z-index: 1;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
