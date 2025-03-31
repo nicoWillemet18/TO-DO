@@ -1,0 +1,88 @@
+* {
+  box-sizing: border-box;
+}
+
+.containerAsideWrapper {
+  display: flex;
+  justify-content: flex-start;
+  width: 20%;
+  min-width: 250px;
+  padding: 0%;
+  margin: 0%;
+}
+
+.fullHeightBox {
+  display: flex;
+  flex-direction: column;
+  background-color: #CFD8DD;
+  flex-grow: 1;
+  height: calc(100vh - 8vh);
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+
+.buttonBacklog {
+  all: unset;
+  background-color: #0D7DD8;
+  color: #000;
+  border: 2px solid #0D7DD8;
+  padding: 0.6rem;
+  border-radius: 0.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  width: 80%;
+  font-weight: bold;
+  margin-top: 0.8rem;
+}
+
+.buttonBacklog:hover {
+  cursor: pointer;
+}
+
+.containerAside {
+  
+  margin: 0.7rem;
+  background-color: white;
+  height: 80vh;
+  padding: 0.4rem;
+  border-radius:0.5rem;
+  width: 16.5vw;
+}
+  
+
+.containerTitleButton {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  margin-top: 0.8rem;
+}
+  
+.title {
+  color:black;
+  font-weight: 200;
+  display: flex;  
+  align-items: center; 
+  gap: 0.5rem; 
+}
+
+.buttonAddSprint {
+  all: unset;
+  position: absolute;
+}
+
+.buttonAddSprint:hover {
+  cursor: pointer;
+}
+
+
+.line {
+  width: 80%;
+  border: 1px solid black;
+  margin: 2px auto;
+}

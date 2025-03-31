@@ -1,9 +1,10 @@
-import { TareasScreen } from "./components/screens/TareasScreen"
+import BacklogScreen from "./components/screens/BacklogScreen/screens/screens/BacklogScreen"
 
 function App() {
   return (
-    <TareasScreen/>
+    <BacklogScreen/>
   )
 }
 
 export default App
+

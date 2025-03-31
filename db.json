@@ -1,22 +1,58 @@
 {
-  "tareas": [
-    {
-      "id": "123",
-      "titulo": "titu1",
-      "descripcion": "desc1",
-      "fechaLimite": "1111"
-    },
-    {
-      "id": "1234",
-      "titulo": "titu2",
-      "descripcion": "desc2",
-      "fechaLimite": "2222"
-    },
-    {
-      "id": "12345",
-      "titulo": "titu3",
-      "descripcion": "desc3",
-      "fechaLimite": "3333"
-    }
-  ]
+  "proyectoList": {
+    "proyectos": [
+      {
+        "id": "1",
+        "nombre": "Proyecto Alpha",
+        "descripcion": "Este es un proyecto de ejemplo para el curso.",
+        "fechaInicio": "2025-01-01",
+        "fechaFin": "2025-06-30",
+        "miembros": [
+          {
+            "id": "1",
+            "nombre": "Juan Pérez",
+            "rol": "Desarrollador"
+          },
+          {
+            "id": "2",
+            "nombre": "Ana Gómez",
+            "rol": "Diseñadora"
+          }
+        ]
+      },
+      {
+        "id": "2",
+        "nombre": "Proyecto Nuevo",
+        "descripcion": "Este es un proyecto de ejemplo para el curso.",
+        "fechaInicio": "2025-01-01",
+        "fechaFin": "2025-06-30",
+        "miembros": [
+          {
+            "id": "3",
+            "nombre": "Federico Lopez",
+            "rol": "Desarrollador"
+          }
+        ]
+      },
+      {
+        "id": "1743383021622",
+        "nombre": "P. Intermedio",
+        "descripcion": "Adelantar hasta funcion delete",
+        "fechaInicio": "2025-04-01",
+        "fechaFin": "2025-04-03",
+        "miembros": [
+          {
+            "id": "1",
+            "nombre": "Micaela Natel",
+            "rol": "Diseños"
+          },
+          {
+            "id": "2",
+            "nombre": "Nicolas Willemet",
+            "rol": "Funciones"
+          }
+        ]
+      }
+    ]
+  }
 }
