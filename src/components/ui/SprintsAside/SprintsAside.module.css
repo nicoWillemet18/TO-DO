@@ -11,12 +11,15 @@
   margin: 0%;
 }
 
+
 .fullHeightBox {
   display: flex;
   flex-direction: column;
+  align-items: center;
   background-color: #CFD8DD;
   flex-grow: 1;
-  height: calc(100vh - 8vh);
+  gap: 0.7rem;
+  height: 92vh;
   padding: 1rem;
   box-sizing: border-box;
 }
@@ -44,16 +47,21 @@
 }
 
 .containerAside {
-  
-  margin: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   background-color: white;
   height: 80vh;
   padding: 0.4rem;
   border-radius:0.5rem;
-  width: 16.5vw;
+  width: 100%;
+  overflow: scroll;
+}
+
+div::-webkit-scrollbar {
+  display: none;
 }
   
-
 .containerTitleButton {
   position: relative;
   display: flex;

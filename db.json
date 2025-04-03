@@ -3,10 +3,10 @@
     "proyectos": [
       {
         "id": "1",
-        "nombre": "Proyecto Alpha",
-        "descripcion": "Este es un proyecto de ejemplo para el curso.",
-        "fechaInicio": "2025-01-01",
-        "fechaFin": "2025-06-30",
+        "nombre": "Proyecto Alpha 2",
+        "descripcion": "Esta es una edicion",
+        "fechaInicio": "2025-01-15",
+        "fechaFin": "2025-06-26",
         "miembros": [
           {
             "id": "1",
@@ -31,25 +31,30 @@
             "id": "3",
             "nombre": "Federico Lopez",
             "rol": "Desarrollador"
+          },
+          {
+            "id": "6",
+            "nombre": "Pedro Brandi",
+            "rol": "Diseñador"
           }
         ]
       },
       {
-        "id": "1743383021622",
-        "nombre": "P. Intermedio",
-        "descripcion": "Adelantar hasta funcion delete",
-        "fechaInicio": "2025-04-01",
-        "fechaFin": "2025-04-03",
+        "id": "3",
+        "nombre": "TP. Intermedio",
+        "descripcion": "Avanzar hasta la funcion delete",
+        "fechaInicio": "2025-03-30",
+        "fechaFin": "2025-04-05",
         "miembros": [
           {
-            "id": "1",
+            "id": "4",
             "nombre": "Micaela Natel",
-            "rol": "Diseños"
+            "rol": "Diseño"
           },
           {
-            "id": "2",
-            "nombre": "Nicolas Willemet",
-            "rol": "Funciones"
+            "id": "5",
+            "nombre": "Nicolas WIllemet",
+            "rol": "Desarrollo"
           }
         ]
       }

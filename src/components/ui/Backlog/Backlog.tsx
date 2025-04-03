@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { getProyectosController } from "../../../data/proyectoController";
+import { deleteProyectoController, getProyectosController } from "../../../data/proyectoController";
 import ListProyectos from "../ListProyectos/ListProyectos";
-import Modal from "../modal/modal"; // Importar el modal
+import Modal from "../modal/modal"; 
 import styles from "./Backlog.module.css";
+import Swal from "sweetalert2";
 
-import { IProyecto } from "../../../types/Iinterfaces"; // Asegúrate de que la ruta es correcta.
+import { IProyecto } from "../../../types/Iinterfaces"; 
 
 const Backlog = () => {
   const [proyectos, setProyectos] = useState<IProyecto[]>([]);
-  const [showModal, setShowModal] = useState(false); // Controlar la visibilidad del modal
-  const [proyectoSeleccionado, setProyectoSeleccionado] = useState<IProyecto | undefined>(undefined); // Cambiar null por undefined
+  const [showModal, setShowModal] = useState(false); 
+  const [proyectoSeleccionado, setProyectoSeleccionado] = useState<IProyecto | undefined>(undefined); 
 
   useEffect(() => {
     const fetchProyectos = async () => {
@@ -23,17 +24,36 @@ const Backlog = () => {
   }, []);
 
   const openModalCrear = () => {
-    setProyectoSeleccionado(undefined); // Usar undefined en lugar de null
+    setProyectoSeleccionado(undefined);
     setShowModal(true);
   };
 
   const openModalEditar = (proyecto: IProyecto) => {
-    setProyectoSeleccionado(proyecto); // Pasamos el proyecto para editar
+    setProyectoSeleccionado(proyecto);
     setShowModal(true);
   };
 
   const closeModal = () => {
     setShowModal(false);
+  };
+
+  const handleDelete = async (id: string) => {
+    const result = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "No podrás revertir esta acción",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+  
+    if (result.isConfirmed) {
+      await deleteProyectoController(id);
+      Swal.fire("Eliminado", "El proyecto ha sido eliminado.", "success");
+      refreshProyectos(); // Refrescar la lista después de eliminar
+    }
   };
 
   const refreshProyectos = async () => {
@@ -54,7 +74,7 @@ const Backlog = () => {
         <Modal
           closeModal={closeModal}
           refreshProyectos={refreshProyectos}
-          proyecto={proyectoSeleccionado} // Ahora se pasa undefined cuando no estamos editando
+          proyecto={proyectoSeleccionado}
         />
       )}
 
@@ -62,7 +82,8 @@ const Backlog = () => {
         <ListProyectos
           key={proyecto.id}
           proyecto={proyecto}
-          onEdit={() => openModalEditar(proyecto)} // Pasar la función onEdit al componente
+          onEdit={() => openModalEditar(proyecto)}
+          onDelete={handleDelete} 
         />
       ))}
     </div>

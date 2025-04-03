@@ -1,22 +1,18 @@
 .sprintCard {
     display: flex;
     flex-direction: column;
-    width: 15vw;
-    height: 20vh;
+    width: 100%;
+    height: 18vh;
     background-color: #CFD8DD;
-    justify-content: center;
+    justify-content: space-around;
     border-radius: 0.4rem ;
-    margin-top: 0.8rem;
-    margin-left: 0.4rem;
-    border: 2px solid #CFD8DD;
-    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
+    padding: 3px;
+    border: 2px solid #a3a3a3;
   }
   
   .sprintCardHeader {
-    display: flex;
+    text-align: center;
     color: black;
-    justify-content: center;
-    padding: 0.4rem 0.4rem;
     font-weight: bold;
     font-size: larger;
   }
@@ -24,18 +20,14 @@
   .sprintCardInfo {
     display: flex;
     flex-direction: column;
-    align-items: center; 
     text-align: center;  
-    margin-left: 0; 
     font-size: small;
     font-weight: bold;
-    margin-bottom: 0.4rem;
   }
   
   .sprintCardButtons {
     display: flex;
-    gap: 0.4rem;
+    gap: 1.2rem;
     justify-content: center;
     align-items: center;
-    margin: 0 auto;
   }

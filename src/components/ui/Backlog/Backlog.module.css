@@ -5,6 +5,11 @@
   flex-direction: column;
   height: 92vh;
   padding: 1rem;
+  overflow: scroll;
+}
+
+div::-webkit-scrollbar {
+  display: none;
 }
 
 .headerBacklog {

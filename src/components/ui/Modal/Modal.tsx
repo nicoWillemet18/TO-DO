@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { IProyecto, IMiembro } from "../../../types/Iinterfaces"; // Asegúrate de importar las interfaces correctas
-import { createProyectoController } from "../../../data/proyectoController"; // Asegúrate de importar el controlador para crear el proyecto
+import { createProyectoController, getProyectosController, updateProyectoController } from "../../../data/proyectoController"; // Asegúrate de importar el controlador para crear el proyecto
 import styles from "./modal.module.css"; // Asegúrate de que la ruta sea correcta
+import Swal from 'sweetalert2';
+
+
 
 type ProyectoModalProps = {
   closeModal: () => void;
@@ -44,30 +47,73 @@ const ProyectoModal = ({ closeModal, refreshProyectos, proyecto }: ProyectoModal
 
   const handleCreateProject = async () => {
     if (!nombre || !descripcion || !fechaInicio || !fechaFin || miembros.length === 0) {
-      alert("Por favor, completa todos los campos.");
+      Swal.fire({
+        icon: 'warning',
+        title: 'Campos incompletos',
+        text: 'Por favor, completa todos los campos antes de continuar.',
+        confirmButtonColor: '#3085d6',
+      });
       return;
     }
 
-    const nuevoProyecto: IProyecto = {
-      id: proyecto ? proyecto.id : (new Date().getTime()).toString(),
+    const proyectosBd = (await getProyectosController()) || [];
+
+    // Obtener el siguiente ID de proyecto si es un nuevo proyecto
+    const nextId = proyectosBd.length > 0 
+      ? (Math.max(...proyectosBd.map((p: IProyecto) => Number(p.id))) + 1).toString()
+      : "1";
+
+    // Unificar todos los miembros de todos los proyectos existentes
+    const allMiembros = proyectosBd.flatMap(p => p.miembros);
+
+    // Obtener el ID más alto de los miembros globalmente
+    let nextMemberId = allMiembros.length > 0 
+      ? Math.max(...allMiembros.map(m => Number(m.id))) + 1 
+      : 1;
+
+    // Convertir IDs a números y crear un Set para rastrear los usados
+    const usedMemberIds = new Set(allMiembros.map(m => Number(m.id)));
+
+    // Identificar los miembros existentes en el proyecto (mantienen su ID)
+    const existingMembers = proyecto ? new Set(proyecto.miembros.map(m => Number(m.id))) : new Set();
+
+    // Asignar nuevos IDs solo a los miembros que no tienen ID o son completamente nuevos
+    const miembrosConId = miembros.map((miembro) => {
+      const memberId = Number(miembro.id);
+      
+      if (!miembro.id || (!existingMembers.has(memberId) && usedMemberIds.has(memberId))) {
+        // Encontrar el próximo ID disponible
+        while (usedMemberIds.has(nextMemberId)) {
+          nextMemberId++;
+        }
+        const newMemberId = nextMemberId.toString();
+        usedMemberIds.add(nextMemberId);
+        return { ...miembro, id: newMemberId };
+      }
+
+      return miembro; // Mantiene su ID si ya existe en el proyecto
+    });
+
+    const proyectoEditado: IProyecto = {
+      id: proyecto ? proyecto.id : nextId,
       nombre,
       descripcion,
       fechaInicio,
       fechaFin,
-      miembros,
+      miembros: miembrosConId,
     };
 
     if (proyecto) {
-      // Si existe un proyecto, se debe actualizar
-      // Aquí puedes hacer la lógica para actualizar el proyecto existente
+      await updateProyectoController(proyectoEditado);
     } else {
-      // Crear un nuevo proyecto
-      await createProyectoController(nuevoProyecto);
+      await createProyectoController(proyectoEditado);
     }
 
     refreshProyectos();
     closeModal();
-  };
+};
+
+
 
   return (
     <div className={styles.modal}>
