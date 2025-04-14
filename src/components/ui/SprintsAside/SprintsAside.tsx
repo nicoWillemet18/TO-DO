@@ -1,12 +1,39 @@
+import { useNavigate } from "react-router-dom"; 
 import { ISprint } from "../../../types/ISprint";
 import SprintCard from "../SprintCard/SprintCard";
 import styles from "./SprintsAside.module.css";
 
+
+  
 const SprintsAside = () => {
+  const navigate = useNavigate(); // 👈 Hook para navegar
+
   const sprint: ISprint = {
+    id: 2,
     nombre: "Sprint 2",
-    inicio: new Date("2025-03-04"),
-    fin: new Date("2025-03-11"),
+    inicio: "2025-03-04",
+    fin: "2025-03-11",
+    tareas: [
+      {
+        id: 1,
+        titulo: "Diseñar login",
+        descripcion: "Crear la pantalla de login",
+        estado: "pendiente",
+        fechaLimite:"2025-04-20",
+      },
+      {
+        id: 2,
+        titulo: "Implementar API",
+        descripcion: "Conectar con la API de usuarios",
+        estado: "en-progreso",
+        fechaLimite: "2025-04-29",
+      }
+    ]
+    
+  };
+
+  const handleCardClick = () => {
+    navigate(`/sprint/${sprint.id}`);
   };
 
   return (
@@ -26,7 +53,7 @@ const SprintsAside = () => {
           <div className={styles.line}></div>
 
           <div className={styles.sprintCardContainer}>
-            <SprintCard sprint={sprint} />
+            <SprintCard sprint={sprint} onCardClick={handleCardClick} />
           </div>
         </div>
       </div>

@@ -1,5 +1,9 @@
+import { ITarea } from "./ITarea";
+
 export interface ISprint {
+    id: number,   
     nombre: string,
-    inicio: Date,
-    fin: Date
+    inicio: string,
+    fin: string,
+    tareas: ITarea[];
   }

@@ -2,25 +2,6 @@
   "proyectoList": {
     "proyectos": [
       {
-        "id": "1",
-        "nombre": "Proyecto Alpha 2",
-        "descripcion": "Esta es una edicion",
-        "fechaInicio": "2025-01-15",
-        "fechaFin": "2025-06-26",
-        "miembros": [
-          {
-            "id": "1",
-            "nombre": "Juan Pérez",
-            "rol": "Desarrollador"
-          },
-          {
-            "id": "2",
-            "nombre": "Ana Gómez",
-            "rol": "Diseñadora"
-          }
-        ]
-      },
-      {
         "id": "2",
         "nombre": "Proyecto Nuevo",
         "descripcion": "Este es un proyecto de ejemplo para el curso.",
@@ -59,5 +40,55 @@
         ]
       }
     ]
-  }
+  },
+  "sprints": [
+    {
+      "id": "1",
+      "nombre": "Sprint de Inicio",
+      "inicio": "2025-03-01",
+      "fin": "2025-03-07",
+      "tareas": [
+        {
+          "id": 1,
+          "titulo": "Diseñar login",
+          "descripcion": "Diseño visual de la pantalla de login",
+          "estado": "pendiente"
+        },
+        {
+          "id": 2,
+          "titulo": "Configurar entorno",
+          "descripcion": "Instalación de dependencias y estructura base",
+          "estado": "en-progreso"
+        },
+        {
+          "id": 3,
+          "titulo": "Revisión de código",
+          "descripcion": "Revisar componentes del primer sprint",
+          "estado": "completado"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "nombre": "Sprint de Integración",
+      "inicio": "2025-03-08",
+      "fin": "2025-03-15",
+      "tareas": [
+        {
+          "id": 4,
+          "titulo": "Integrar API",
+          "descripcion": "Conectar frontend con backend",
+          "estado": "backlog",
+          "fechaLimite": "2025-04-20"
+        },
+        {
+          "id": 5,
+          "titulo": "Pruebas unitarias",
+          "descripcion": "Crear pruebas para componentes principales",
+          "estado": "backlog",
+          "fechaLimite": "2025-04-29"
+        }
+      ]
+    }
+  ]
 }
