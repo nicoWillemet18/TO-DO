@@ -7,10 +7,13 @@
   justify-content: flex-start;
   width: 20%;
   min-width: 250px;
-  padding: 0%;
-  margin: 0%;
 }
 
+.sprintCardContainer{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
 
 .fullHeightBox {
   display: flex;
@@ -20,7 +23,6 @@
   flex-grow: 1;
   gap: 0.7rem;
   height: 92vh;
-  padding: 1rem;
   box-sizing: border-box;
 }
 
@@ -51,11 +53,11 @@
   flex-direction: column;
   gap: 0.5rem;
   background-color: white;
-  height: 80vh;
+  height: 83vh;
   padding: 0.4rem;
   border-radius:0.5rem;
-  width: 100%;
   overflow: scroll;
+  width: 95%;
 }
 
 div::-webkit-scrollbar {
@@ -73,7 +75,7 @@ div::-webkit-scrollbar {
   
 .title {
   color:black;
-  font-weight: 200;
+  font-weight: 600;
   display: flex;  
   align-items: center; 
   gap: 0.5rem; 

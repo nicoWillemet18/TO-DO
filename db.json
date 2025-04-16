@@ -6,38 +6,14 @@
         "nombre": "Proyecto Nuevo",
         "descripcion": "Este es un proyecto de ejemplo para el curso.",
         "fechaInicio": "2025-01-01",
-        "fechaFin": "2025-06-30",
-        "miembros": [
-          {
-            "id": "3",
-            "nombre": "Federico Lopez",
-            "rol": "Desarrollador"
-          },
-          {
-            "id": "6",
-            "nombre": "Pedro Brandi",
-            "rol": "Diseñador"
-          }
-        ]
+        "fechaFin": "2025-06-30"
       },
       {
         "id": "3",
         "nombre": "TP. Intermedio",
         "descripcion": "Avanzar hasta la funcion delete",
         "fechaInicio": "2025-03-30",
-        "fechaFin": "2025-04-05",
-        "miembros": [
-          {
-            "id": "4",
-            "nombre": "Micaela Natel",
-            "rol": "Diseño"
-          },
-          {
-            "id": "5",
-            "nombre": "Nicolas WIllemet",
-            "rol": "Desarrollo"
-          }
-        ]
+        "fechaFin": "2025-04-05"
       }
     ]
   },
@@ -89,6 +65,13 @@
           "fechaLimite": "2025-04-29"
         }
       ]
+    },
+    {
+      "id": "3",
+      "nombre": "Sprint Prueba",
+      "inicio": "2025-04-16",
+      "fin": "2025-04-23",
+      "tareas": []
     }
   ]
 }

@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { ISprint} from "../../../../../../types/ISprint";
+import { ISprint} from "../../../types/ISprint";
 
 import styles from "./SprintScreen.module.css";
 
@@ -12,7 +12,7 @@ const SprintScreen = () => {
   useEffect(() => {
     const fetchSprint = async () => {
       try {
-        const response = await axios.get(`http://localhost:3004/sprints/${id}`);
+        const response = await axios.get(`http://localhost:3000/sprints/${id}`);
         setSprint(response.data);
       } catch (error) {
         console.error("Error cargando sprint: ", error);
@@ -37,7 +37,7 @@ const SprintScreen = () => {
   
     try {
       // Actualiza el sprint completo, incluyendo las tareas
-      await axios.put(`http://localhost:3004/sprints/${sprint.id}`, {
+      await axios.put(`http://localhost:3000/sprints/${sprint.id}`, {
         ...sprint,
         tareas: nuevasTareas
       });
@@ -117,7 +117,7 @@ const SprintScreen = () => {
                   🔄 Reabrir
                 </button>
                 <button onClick={() => actualizarEstadoTarea(t.id, "backlog")}>
-                   ⬅ Backlog
+                  ⬅ Backlog
                 </button>
               </div>
             </div>

@@ -9,12 +9,4 @@ export interface IProyectoList {
     descripcion: string; // Descripción del proyecto
     fechaInicio: string; // Fecha de inicio del proyecto en formato "YYYY-MM-DD"
     fechaFin: string; // Fecha de finalización del proyecto en formato "YYYY-MM-DD"
-    miembros: IMiembro[]; // Lista de miembros involucrados en el proyecto
-  }
-  
-  // Interfaz que representa a un miembro dentro de un proyecto
-  export interface IMiembro {
-    id: string; // Identificador único del miembro
-    nombre: string; // Nombre del miembro
-    rol: string; // Rol que desempeña dentro del proyecto (ej: Desarrollador, Diseñador, etc.)
   }

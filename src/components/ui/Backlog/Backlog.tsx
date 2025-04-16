@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { deleteProyectoController, getProyectosController } from "../../../data/proyectoController";
 import ListProyectos from "../ListProyectos/ListProyectos";
-import Modal from "../modal/modal"; 
+import Modal from "../modal/Modal"; 
 import styles from "./Backlog.module.css";
 import Swal from "sweetalert2";
 

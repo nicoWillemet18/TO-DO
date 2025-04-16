@@ -74,14 +74,6 @@ const ListProyectos: FC<IPropsIProyecto> = ({ proyecto, onEdit, onDelete }) => {
           <p><strong>Descripción:</strong> {proyecto.descripcion}</p>
           <p><strong>Fecha de Inicio:</strong> {new Date(proyecto.fechaInicio).toISOString().split("T")[0]}</p>
           <p><strong>Fecha de Fin:</strong> {new Date(proyecto.fechaFin).toISOString().split("T")[0]}</p>
-          <h3 className={styles.modalSubTitle}>Miembros:</h3>
-          <ul className={styles.modalList}>
-            {proyecto.miembros.map((miembro) => (
-              <li key={miembro.id} className={styles.modalListItem}>
-                {miembro.nombre} - {miembro.rol}
-              </li>
-            ))}
-          </ul>
           <button className={styles.modalCloseButton} onClick={() => setModalIsOpen(false)}>
             Cerrar
           </button>
