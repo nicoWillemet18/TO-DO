@@ -10,6 +10,7 @@ type IPropsSprintCard = {
   onCardClick?: () => void;
   onDelete?: (id: string) => void; // Nueva prop para manejar la eliminación
   onView?: (sprint: ISprint) => void; // Nueva prop para manejar la visualización
+  onEdit?: (sprint: ISprint) => void;
 };
 
 const SprintCard: FC<IPropsSprintCard> = ({ sprint, onCardClick, onDelete, onView }) => {

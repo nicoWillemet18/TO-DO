@@ -68,16 +68,16 @@ const ProyectoModal = ({ closeModal, refreshProyectos, proyecto }: ProyectoModal
     <div className={styles.proyectoModal}>
       <div className={styles.proyectoModalContent}>
         <h2 className={styles.proyectoModalTitle}>
-          {proyecto ? "Editar Proyecto" : "Crear Nuevo Proyecto"}
+          {proyecto ? "Editar Tarea" : "Crear Nueva Tarea"}
         </h2>
 
         <div className={styles.proyectoFormGroup}>
-          <label className={styles.proyectoLabel}>Nombre del Proyecto:</label>
+          <label className={styles.proyectoLabel}>Nombre de la tarea:</label>
           <input
             type="text"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-            placeholder="Nombre del Proyecto"
+            placeholder="Nombre de la tarea"
             className={styles.proyectoInput}
           />
         </div>
@@ -87,7 +87,7 @@ const ProyectoModal = ({ closeModal, refreshProyectos, proyecto }: ProyectoModal
           <textarea
             value={descripcion}
             onChange={(e) => setDescripcion(e.target.value)}
-            placeholder="Descripción del Proyecto"
+            placeholder="Descripción de tarea"
             className={styles.proyectoTextarea}
           />
         </div>
@@ -113,11 +113,11 @@ const ProyectoModal = ({ closeModal, refreshProyectos, proyecto }: ProyectoModal
         </div>
 
         <div className={styles.proyectoModalActions}>
-          <button className={styles.proyectoButton} onClick={handleCreateProject}>
-            {proyecto ? "Guardar Cambios" : "Crear Proyecto"}
-          </button>
           <button className={styles.proyectoButtonCancel} onClick={closeModal}>
             Cancelar
+          </button>
+          <button className={styles.proyectoButton} onClick={handleCreateProject}>
+            {proyecto ? "Guardar Cambios" : "Crear Tarea"}
           </button>
         </div>
       </div>

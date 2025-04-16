@@ -56,8 +56,8 @@
   height: 83vh;
   padding: 0.4rem;
   border-radius:0.5rem;
-  overflow: scroll;
   width: 95%;
+  overflow: scroll;
 }
 
 div::-webkit-scrollbar {

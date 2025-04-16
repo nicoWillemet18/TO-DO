@@ -14,6 +14,7 @@ const SprintModal = ({ closeModal, refreshSprints, sprint }: SprintModalProps) =
   const [nombre, setNombre] = useState<string>(sprint ? sprint.nombre : "");
   const [inicio, setInicio] = useState<string>(sprint ? sprint.inicio : "");
   const [fin, setFin] = useState<string>(sprint ? sprint.fin : "");
+  
 
   // Si hay un sprint, estamos en modo "ver" y no podemos modificar los campos
   const isViewMode = !!sprint;
@@ -97,14 +98,14 @@ const SprintModal = ({ closeModal, refreshSprints, sprint }: SprintModalProps) =
         </div>
 
         <div className={styles.proyectoModalActions}>
+          <button className={styles.proyectoButtonCancel} onClick={closeModal}>
+            {isViewMode ? "Cerrar" : "Cancelar"}
+          </button>
           {!isViewMode && (
             <button className={styles.proyectoButton} onClick={handleCreateSprint}>
               Crear Sprint
             </button>
           )}
-          <button className={styles.proyectoButtonCancel} onClick={closeModal}>
-            {isViewMode ? "Cerrar" : "Cancelar"}
-          </button>
         </div>
       </div>
     </div>

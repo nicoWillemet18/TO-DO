@@ -3,8 +3,8 @@
     "proyectos": [
       {
         "id": "2",
-        "nombre": "Proyecto Nuevo",
-        "descripcion": "Este es un proyecto de ejemplo para el curso.",
+        "nombre": "Primer tarea",
+        "descripcion": "Esta es una tarea de ejemplo para el curso.",
         "fechaInicio": "2025-01-01",
         "fechaFin": "2025-06-30"
       },
@@ -28,19 +28,19 @@
           "id": 1,
           "titulo": "Diseñar login",
           "descripcion": "Diseño visual de la pantalla de login",
-          "estado": "pendiente"
+          "estado": "en-progreso"
         },
         {
           "id": 2,
           "titulo": "Configurar entorno",
           "descripcion": "Instalación de dependencias y estructura base",
-          "estado": "en-progreso"
+          "estado": "completado"
         },
         {
           "id": 3,
           "titulo": "Revisión de código",
           "descripcion": "Revisar componentes del primer sprint",
-          "estado": "completado"
+          "estado": "pendiente"
         }
       ]
     },
@@ -54,24 +54,17 @@
           "id": 4,
           "titulo": "Integrar API",
           "descripcion": "Conectar frontend con backend",
-          "estado": "backlog",
+          "estado": "pendiente",
           "fechaLimite": "2025-04-20"
         },
         {
           "id": 5,
           "titulo": "Pruebas unitarias",
           "descripcion": "Crear pruebas para componentes principales",
-          "estado": "backlog",
+          "estado": "en-progreso",
           "fechaLimite": "2025-04-29"
         }
       ]
-    },
-    {
-      "id": "3",
-      "nombre": "Sprint Prueba",
-      "inicio": "2025-04-16",
-      "fin": "2025-04-23",
-      "tareas": []
     }
   ]
 }

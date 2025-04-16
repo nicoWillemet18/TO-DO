@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { deleteProyectoController, getProyectosController } from "../../../data/proyectoController";
 import ListProyectos from "../ListProyectos/ListProyectos";
-import Modal from "../modal/Modal"; 
+import Modal from "../Modal/Modal"; 
 import styles from "./Backlog.module.css";
 import Swal from "sweetalert2";
 
@@ -66,7 +66,7 @@ const Backlog = () => {
       <div className={styles.headerBacklog}>
         <h2 className={styles.title}>Backlog</h2>
         <button className={styles.buttonTask} onClick={openModalCrear}>
-          Crear nuevo proyecto <i className="bi bi-list-task"></i>
+          Crear nueva tarea <i className="bi bi-list-task"></i>
         </button>
       </div>
 

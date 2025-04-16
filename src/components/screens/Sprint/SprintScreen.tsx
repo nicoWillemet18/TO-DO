@@ -58,7 +58,7 @@ const SprintScreen = () => {
     <div className={styles.container}>
       <div className={styles.headerContainer}>
         <div className={styles.titleSection}>
-          <h2 className={styles.sprintTitle}>Nombre de la Sprint: {sprint.id}</h2>
+          <h2 className={styles.sprintTitle}>Nombre de la Sprint: {sprint.nombre}</h2>
           <p className={styles.subtitle}>Tareas en la sprint</p>
       </div>
       <button className={styles.createButton}>+ Crear tarea</button>
