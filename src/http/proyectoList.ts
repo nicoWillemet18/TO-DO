@@ -1,13 +1,13 @@
 import axios from "axios"; // Importamos axios para hacer solicitudes HTTP
-import { IProyecto, IProyectoList } from "../types/Iinterfaces"; // Importamos las interfaces tipadas
+import { IProyecto } from "../types/Iinterfaces"; // Importamos la interfaz IProyecto
 import { API_URL } from "../utils/constantes"; // Importamos la URL base de la API
 
 // Función para actualizar el objeto global del json server
 export const putProyectList = async (proyectos: IProyecto[]) => {
   try {
-    // Hacemos una petición PUT a la API enviando la lista de proyectos
-    const response = await axios.put<IProyectoList>(API_URL, {
-      proyectos: proyectos, // Enviamos los proyectos en el body de la solicitud
+    // Hacemos una petición PUT a la API enviando la lista de proyectos dentro de la estructura adecuada
+    const response = await axios.put(API_URL, {
+        Tareas: proyectos, // Colocamos los proyectos bajo "Backlog.Tareas"
     });
 
     return response.data; // Devolvemos la respuesta de la API

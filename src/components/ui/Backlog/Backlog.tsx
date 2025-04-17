@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { deleteProyectoController, getProyectosController } from "../../../data/proyectoController";
-import ListProyectos from "../ListProyectos/ListProyectos";
-import Modal from "../Modal/Modal"; 
+import { deleteTareaController, getTareasController } from "../../../data/proyectoController"; // Usando las funciones actualizadas
+import ListProyectos from "../ListTareas/ListTareas";
+import Modal from "../modal/Modal"; 
 import styles from "./Backlog.module.css";
 import Swal from "sweetalert2";
 
@@ -14,7 +14,7 @@ const Backlog = () => {
 
   useEffect(() => {
     const fetchProyectos = async () => {
-      const proyectosData = await getProyectosController();
+      const proyectosData = await getTareasController(); // Cambié de getProyectosController a getTareasController
       if (proyectosData) {
         setProyectos(proyectosData);
       }
@@ -50,14 +50,14 @@ const Backlog = () => {
     });
   
     if (result.isConfirmed) {
-      await deleteProyectoController(id);
+      await deleteTareaController(id); // Cambié de deleteProyectoController a deleteTareaController
       Swal.fire("Eliminado", "El proyecto ha sido eliminado.", "success");
       refreshProyectos(); // Refrescar la lista después de eliminar
     }
   };
 
   const refreshProyectos = async () => {
-    const proyectosData = await getProyectosController();
+    const proyectosData = await getTareasController(); // Cambié de getProyectosController a getTareasController
     setProyectos(proyectosData || []);
   };
 

@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ISprint } from "../../../types/ISprint";
 import SprintCard from "../SprintCard/SprintCard";
-import { getSprintsController, deleteSprintController } from "../../../data/sprintController";
+import {
+  getSprintsController,
+  deleteSprintController,
+} from "../../../data/sprintController";
 import styles from "./SprintsAside.module.css";
 import SprintModal from "../modalSprints/modalSprints";
 
@@ -11,6 +14,7 @@ const SprintsAside = () => {
   const [sprints, setSprints] = useState<ISprint[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedSprint, setSelectedSprint] = useState<ISprint | null>(null);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchSprints = async () => {
@@ -19,7 +23,6 @@ const SprintsAside = () => {
         setSprints(sprintsData);
       }
     };
-
     fetchSprints();
   }, []);
 
@@ -31,14 +34,16 @@ const SprintsAside = () => {
     navigate("/");
   };
 
-  const openModal = (sprint: ISprint | null = null) => {
+  const openModal = (sprint: ISprint | null = null, edit: boolean = false) => {
     setSelectedSprint(sprint);
+    setIsEditMode(edit);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedSprint(null);
+    setIsEditMode(false);
   };
 
   const refreshSprints = async () => {
@@ -48,16 +53,18 @@ const SprintsAside = () => {
     }
   };
 
-  // Función para manejar la eliminación de un sprint
   const handleDeleteSprint = async (id: string) => {
     await deleteSprintController(id);
     const updatedSprints = sprints.filter((sprint) => sprint.id !== id);
     setSprints(updatedSprints);
   };
 
-  // Función para manejar la visualización del sprint
   const handleViewSprint = (sprint: ISprint) => {
-    openModal(sprint);
+    openModal(sprint, false);
+  };
+
+  const handleEditSprint = (sprint: ISprint) => {
+    openModal(sprint, true);
   };
 
   return (
@@ -88,19 +95,20 @@ const SprintsAside = () => {
                 sprint={sprint}
                 onCardClick={() => handleCardClick(sprint.id)}
                 onDelete={handleDeleteSprint}
-                onView={handleViewSprint} // Pasamos la función para ver el sprint
+                onView={handleViewSprint}
+                onEdit={handleEditSprint}
               />
             ))}
           </div>
         </div>
       </div>
 
-      {/* Mostrar el modal para ver o crear un sprint */}
       {isModalOpen && (
         <SprintModal
           closeModal={closeModal}
           refreshSprints={refreshSprints}
-          sprint={selectedSprint} // Pasamos el sprint seleccionado o null para crear uno nuevo
+          sprint={selectedSprint}
+          editMode={isEditMode}
         />
       )}
     </div>

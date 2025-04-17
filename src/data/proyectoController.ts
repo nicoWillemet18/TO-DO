@@ -3,78 +3,72 @@ import { IProyecto } from "../types/Iinterfaces"; // Importamos la interfaz IPro
 import { API_URL } from "../utils/constantes"; // Importamos la URL base de la API
 import { putProyectList } from "../http/proyectoList"; // Importamos la función para actualizar la lista de proyectos
 
-// 🔹 Función para obtener todos los proyectos
-export const getProyectosController = async (): Promise<
-  IProyecto[] | undefined
-> => {
+// 🔹 Función para obtener todas las tareas del Backlog
+export const getTareasController = async (): Promise<IProyecto[] | undefined> => {
   try {
-    // Hacemos una petición GET a la API para obtener los proyectos
-    const response = await axios.get<{ proyectos: IProyecto[] }>(API_URL);
-    return response.data.proyectos; // Retornamos la lista de proyectos
+    // Hacemos una petición GET a la API para obtener las tareas
+    const response = await axios.get<{ Tareas: IProyecto[] }>(API_URL);
+    return response.data.Tareas; // Retornamos la lista de tareas
   } catch (error) {
-    console.log("Problemas en getProyectosController", error); // Manejamos errores
+    console.log("Problemas en getTareasController", error); // Manejamos errores
   }
 };
 
-// 🔹 Función para crear un nuevo proyecto
-export const createProyectoController = async (proyectoNuevo: IProyecto) => {
+// 🔹 Función para crear una nueva tarea en el Backlog
+export const createTareaController = async (tareaNueva: IProyecto) => {
   try {
-    // Obtenemos la lista de proyectos actuales
-    const proyectosBd = await getProyectosController();
+    // Obtenemos la lista de tareas actuales
+    const tareasBd = await getTareasController();
 
-    if (proyectosBd) {
-      // Si existen proyectos, agregamos el nuevo a la lista y actualizamos
-      await putProyectList([...proyectosBd, proyectoNuevo]);
+    if (tareasBd) {
+      // Si existen tareas, agregamos la nueva a la lista y actualizamos
+      await putProyectList([...tareasBd, tareaNueva]);
     } else {
-      // Si no existen proyectos, creamos la lista con el nuevo proyecto
-      await putProyectList([proyectoNuevo]);
+      // Si no existen tareas, creamos la lista con la nueva tarea
+      await putProyectList([tareaNueva]);
     }
 
-    return proyectoNuevo; // Retornamos el proyecto creado
+    return tareaNueva; // Retornamos la tarea creada
   } catch (error) {
-    console.log("Error en createProyectoController", error);
+    console.log("Error en createTareaController", error);
   }
 };
 
-// 🔹 Función para actualizar un proyecto existente
-export const updateProyectoController = async (
-  proyectoActualizado: IProyecto
-) => {
+// 🔹 Función para actualizar una tarea existente
+export const updateTareaController = async (tareaActualizada: IProyecto) => {
   try {
-    // Obtenemos la lista de proyectos actuales
-    const proyectosBd = await getProyectosController();
+    // Obtenemos la lista de tareas actuales
+    const tareasBd = await getTareasController();
 
-    if (proyectosBd) {
-      // Mapeamos los proyectos y reemplazamos el que coincida con el ID del actualizado
-      const result = proyectosBd.map((proyectBd) =>
-        proyectBd.id === proyectoActualizado.id
-          ? { ...proyectBd, ...proyectoActualizado } // Actualizamos los datos del proyecto
-          : proyectBd
+    if (tareasBd) {
+      // Mapeamos las tareas y reemplazamos la que coincida con el ID de la tarea actualizada
+      const result = tareasBd.map((tareaBd) =>
+        tareaBd.id === tareaActualizada.id
+          ? { ...tareaBd, ...tareaActualizada } // Actualizamos los datos de la tarea
+          : tareaBd
       );
 
-      await putProyectList(result); // Guardamos la nueva lista de proyectos
+      await putProyectList(result); // Guardamos la nueva lista de tareas
     }
-    return proyectoActualizado; // Retornamos el proyecto actualizado
+    return tareaActualizada; // Retornamos la tarea actualizada
   } catch (error) {
-    console.log("Error en updateProyectoController", error);
+    console.log("Error en updateTareaController", error);
   }
 };
 
-// 🔹 Función para eliminar un proyecto por su ID
-export const deleteProyectoController = async (idProyectoAEliminar: string) => {
+// 🔹 Función para eliminar una tarea por su ID
+export const deleteTareaController = async (idTareaAEliminar: string) => {
   try {
-    // Obtenemos la lista de proyectos actuales
-    const proyectosBd = await getProyectosController();
+    // Obtenemos la lista de tareas actuales
+    const tareasBd = await getTareasController();
 
-    if (proyectosBd) {
-      // Filtramos la lista eliminando el proyecto con el ID dado
-      const result = proyectosBd.filter(
-        (proyectBd) => proyectBd.id !== idProyectoAEliminar
-      );
+    if (tareasBd) {
+      // Filtramos la lista eliminando la tarea con el ID dado
+      const result = tareasBd.filter((tareaBd) => tareaBd.id !== idTareaAEliminar);
 
-      await putProyectList(result); // Guardamos la nueva lista sin el proyecto eliminado
+      await putProyectList(result); // Guardamos la nueva lista sin la tarea eliminada
     }
   } catch (error) {
-    console.log("Error en deleteProyectoController", error);
+    console.log("Error en deleteTareaController", error);
   }
 };

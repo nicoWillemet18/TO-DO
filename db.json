@@ -1,6 +1,6 @@
 {
-  "proyectoList": {
-    "proyectos": [
+  "Backlog": {
+    "Tareas": [
       {
         "id": "2",
         "nombre": "Primer tarea",
@@ -14,57 +14,80 @@
         "descripcion": "Avanzar hasta la funcion delete",
         "fechaInicio": "2025-03-30",
         "fechaFin": "2025-04-05"
+      },
+      {
+        "id": "4",
+        "nombre": "TareaPrueba",
+        "descripcion": "Nisdas",
+        "fechaInicio": "2025-04-18",
+        "fechaFin": "2025-04-24"
       }
     ]
   },
-  "sprints": [
-    {
-      "id": "1",
-      "nombre": "Sprint de Inicio",
-      "inicio": "2025-03-01",
-      "fin": "2025-03-07",
-      "tareas": [
-        {
-          "id": 1,
-          "titulo": "Diseñar login",
-          "descripcion": "Diseño visual de la pantalla de login",
-          "estado": "en-progreso"
-        },
-        {
-          "id": 2,
-          "titulo": "Configurar entorno",
-          "descripcion": "Instalación de dependencias y estructura base",
-          "estado": "completado"
-        },
-        {
-          "id": 3,
-          "titulo": "Revisión de código",
-          "descripcion": "Revisar componentes del primer sprint",
-          "estado": "pendiente"
-        }
-      ]
-    },
-    {
-      "id": "2",
-      "nombre": "Sprint de Integración",
-      "inicio": "2025-03-08",
-      "fin": "2025-03-15",
-      "tareas": [
-        {
-          "id": 4,
-          "titulo": "Integrar API",
-          "descripcion": "Conectar frontend con backend",
-          "estado": "pendiente",
-          "fechaLimite": "2025-04-20"
-        },
-        {
-          "id": 5,
-          "titulo": "Pruebas unitarias",
-          "descripcion": "Crear pruebas para componentes principales",
-          "estado": "en-progreso",
-          "fechaLimite": "2025-04-29"
-        }
-      ]
-    }
-  ]
+  "Sprints": {
+    "listSprints": [
+      {
+        "id": "1",
+        "nombre": "Sprint de Inicio",
+        "inicio": "2025-03-01",
+        "fin": "2025-03-07",
+        "tareas": [
+          {
+            "id": 1,
+            "titulo": "Diseñar login",
+            "descripcion": "Diseño visual de la pantalla de login",
+            "estado": "en-progreso"
+          },
+          {
+            "id": 2,
+            "titulo": "Configurar entorno",
+            "descripcion": "Instalación de dependencias y estructura base",
+            "estado": "completado"
+          },
+          {
+            "id": 3,
+            "titulo": "Revisión de código",
+            "descripcion": "Revisar componentes del primer sprint",
+            "estado": "pendiente"
+          }
+        ]
+      },
+      {
+        "id": "2",
+        "nombre": "Sprint de Integración",
+        "inicio": "2025-03-12",
+        "fin": "2025-03-15",
+        "tareas": [
+          {
+            "id": 4,
+            "titulo": "Integrar API",
+            "descripcion": "Conectar frontend con backend",
+            "estado": "pendiente",
+            "fechaLimite": "2025-04-20"
+          },
+          {
+            "id": 5,
+            "titulo": "Pruebas unitarias",
+            "descripcion": "Crear pruebas para componentes principales",
+            "estado": "completado",
+            "fechaLimite": "2025-04-29"
+          }
+        ]
+      },
+      {
+        "id": "3",
+        "nombre": "Sprint Prueba",
+        "inicio": "2025-04-18",
+        "fin": "2025-04-24",
+        "tareas": []
+      },
+      {
+        "id": "4",
+        "nombre": "Otra",
+        "inicio": "2025-04-18",
+        "fin": "2025-04-25",
+        "tareas": []
+      }
+    ]
+  }
 }

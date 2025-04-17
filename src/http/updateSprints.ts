@@ -5,12 +5,14 @@ import { ISprint } from "../types/ISprint";
 // URL base del backend
 const API_BASE_URL = "http://localhost:3000";
 
-// Actualizar la lista de sprints
-export const putSprintList = async (sprints: ISprint[]): Promise<any> => {
+// 🔹 Actualizar la lista completa de sprints
+export const putSprintList = async (sprints: ISprint[]): Promise<void> => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/sprints`, sprints);
-    return response.data;
+    await axios.put(`${API_BASE_URL}/Sprints`, {
+      listSprints: sprints,
+    });
+    console.log("✅ Lista de sprints actualizada correctamente");
   } catch (error) {
-    console.error("Error en putSprintList:", error);
+    console.error("❌ Error en putSprintList:", error);
   }
 };

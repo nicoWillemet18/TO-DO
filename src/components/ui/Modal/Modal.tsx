@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { IProyecto } from "../../../types/Iinterfaces";
 import {
-  createProyectoController,
-  getProyectosController,
-  updateProyectoController,
-} from "../../../data/proyectoController";
+  createTareaController,
+  getTareasController,
+  updateTareaController,
+} from "../../../data/proyectoController"; // Importando las funciones actualizadas
 import styles from "./modal.module.css";
 import Swal from "sweetalert2";
 
@@ -40,13 +40,13 @@ const ProyectoModal = ({ closeModal, refreshProyectos, proyecto }: ProyectoModal
       return;
     }
 
-    const proyectosBd = (await getProyectosController()) || [];
+    const tareasBd = (await getTareasController()) || [];
     const nextId =
-      proyectosBd.length > 0
-        ? (Math.max(...proyectosBd.map((p: IProyecto) => Number(p.id))) + 1).toString()
+      tareasBd.length > 0
+        ? (Math.max(...tareasBd.map((t: IProyecto) => Number(t.id))) + 1).toString()
         : "1";
 
-    const proyectoEditado: IProyecto = {
+    const tareaEditada: IProyecto = {
       id: proyecto ? proyecto.id : nextId,
       nombre,
       descripcion,
@@ -55,9 +55,9 @@ const ProyectoModal = ({ closeModal, refreshProyectos, proyecto }: ProyectoModal
     };
 
     if (proyecto) {
-      await updateProyectoController(proyectoEditado);
+      await updateTareaController(tareaEditada); // Función para actualizar
     } else {
-      await createProyectoController(proyectoEditado);
+      await createTareaController(tareaEditada); // Función para crear
     }
 
     refreshProyectos();
@@ -87,7 +87,7 @@ const ProyectoModal = ({ closeModal, refreshProyectos, proyecto }: ProyectoModal
           <textarea
             value={descripcion}
             onChange={(e) => setDescripcion(e.target.value)}
-            placeholder="Descripción de tarea"
+            placeholder="Descripción de la tarea"
             className={styles.proyectoTextarea}
           />
         </div>
@@ -126,5 +126,3 @@ const ProyectoModal = ({ closeModal, refreshProyectos, proyecto }: ProyectoModal
 };
 
 export default ProyectoModal;
-
-
