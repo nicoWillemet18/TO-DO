@@ -1,18 +1,21 @@
 import { FC, useState, useEffect } from "react";
 import styles from "./ListTareas.module.css";
-import { IProyecto } from "../../../types/Iinterfaces";
+import { ITareaBacklog } from "../../../types/ITareaBacklog";
 import { ISprint } from "../../../types/ISprint";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import { BsDropbox } from "react-icons/bs";
 import Modal from "react-modal";
-import { getSprintsController } from "../../../data/sprintController";
+import { addTareaToSprintController, getSprintsController } from "../../../data/sprintController";
+import { ITareaSprint } from "../../../types/ITareaSprint";
+import { deleteTareaController, getTareasController } from "../../../data/tareaController";
 
 Modal.setAppElement("#root");
 
 type IPropsIProyecto = {
-  proyecto: IProyecto;
+  proyecto: ITareaBacklog;
   onEdit: () => void;
   onDelete: (id: string) => void;
+  setTareas: React.Dispatch<React.SetStateAction<ITareaBacklog[]>>; // 🔹 Agregá esta línea
 };
 
 const formatearFecha = (fecha: string): string => {
@@ -23,7 +26,7 @@ const formatearFecha = (fecha: string): string => {
   });
 };
 
-const ListTareas: FC<IPropsIProyecto> = ({ proyecto, onEdit, onDelete }) => {
+const ListTareas: FC<IPropsIProyecto> = ({ proyecto, onEdit, onDelete, setTareas }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [sprints, setSprints] = useState<ISprint[]>([]);
   const [selectedSprint, setSelectedSprint] = useState<string>("");
@@ -44,6 +47,42 @@ const ListTareas: FC<IPropsIProyecto> = ({ proyecto, onEdit, onDelete }) => {
     setSelectedSprint(e.target.value);
   };
 
+  const handleEnviarTarea = async () => {
+    if (!selectedSprint) return;
+  
+    try {
+      const sprints = await getSprintsController();
+      if (!sprints) return;
+  
+      const allTareas = sprints.flatMap((sprint) => sprint.tareas);
+      const maxId = allTareas.reduce((max, tarea) => tarea.id > max ? tarea.id : max, 0);
+  
+      const nuevaTarea: ITareaSprint = {
+        id: maxId + 1,
+        titulo: proyecto.nombre,
+        descripcion: proyecto.descripcion,
+        estado: "pendiente",
+        fechaLimite: proyecto.fechaFin
+      };
+  
+      // Añadir la tarea al Sprint
+      await addTareaToSprintController(selectedSprint, nuevaTarea);
+  
+      // Eliminar la tarea del Backlog
+      await deleteTareaController(proyecto.id);
+  
+      // Refrescar las tareas del Backlog después de eliminar
+      const tareasActualizadas = await getTareasController();
+      setTareas(tareasActualizadas || []);
+  
+    } catch (error) {
+      console.error("Error al enviar la tarea", error);
+    }
+  };
+  
+  
+  
+
   return (
     <div className={styles.proyecto}>
       <div className={styles.cont}>
@@ -63,6 +102,7 @@ const ListTareas: FC<IPropsIProyecto> = ({ proyecto, onEdit, onDelete }) => {
             className={styles.enviar}
             style={{ maxWidth: "200px" }}
             disabled={!selectedSprint}
+            onClick={handleEnviarTarea}
           >
             Enviar a <BsDropbox className={styles.icon} />
           </button>

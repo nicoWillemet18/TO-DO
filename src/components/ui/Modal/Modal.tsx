@@ -1,35 +1,39 @@
 import { useState, useEffect } from "react";
-import { IProyecto } from "../../../types/Iinterfaces";
+import { ITareaBacklog } from "../../../types/ITareaBacklog";
 import {
   createTareaController,
   getTareasController,
   updateTareaController,
-} from "../../../data/proyectoController"; // Importando las funciones actualizadas
+} from "../../../data/tareaController"; // Importando las funciones actualizadas
 import styles from "./modal.module.css";
 import Swal from "sweetalert2";
+import { createTareaSprint } from "../../../data/sprintController";
 
-type ProyectoModalProps = {
+type TareaModalProps = {
   closeModal: () => void;
-  refreshProyectos: () => void;
-  proyecto?: IProyecto;
+  refreshTareas: () => void;
+  tarea?: ITareaBacklog;
+  idSprint?: string;
+  esBacklog?: boolean;
+
 };
 
-const ProyectoModal = ({ closeModal, refreshProyectos, proyecto }: ProyectoModalProps) => {
+const TareaModal = ({ closeModal, refreshTareas, tarea, idSprint, esBacklog}: TareaModalProps) => {
   const [nombre, setNombre] = useState<string>("");
   const [descripcion, setDescripcion] = useState<string>("");
   const [fechaInicio, setFechaInicio] = useState<string>("");
   const [fechaFin, setFechaFin] = useState<string>("");
 
   useEffect(() => {
-    if (proyecto) {
-      setNombre(proyecto.nombre);
-      setDescripcion(proyecto.descripcion);
-      setFechaInicio(proyecto.fechaInicio);
-      setFechaFin(proyecto.fechaFin);
+    if (tarea) {
+      setNombre(tarea.nombre);
+      setDescripcion(tarea.descripcion);
+      setFechaInicio(tarea.fechaInicio);
+      setFechaFin(tarea.fechaFin);
     }
-  }, [proyecto]);
+  }, [tarea]);
 
-  const handleCreateProject = async () => {
+  const handleCreateTareaBacklog = async () => {
     if (!nombre || !descripcion || !fechaInicio || !fechaFin) {
       Swal.fire({
         icon: "warning",
@@ -43,32 +47,58 @@ const ProyectoModal = ({ closeModal, refreshProyectos, proyecto }: ProyectoModal
     const tareasBd = (await getTareasController()) || [];
     const nextId =
       tareasBd.length > 0
-        ? (Math.max(...tareasBd.map((t: IProyecto) => Number(t.id))) + 1).toString()
+        ? (Math.max(...tareasBd.map((t: ITareaBacklog) => Number(t.id))) + 1).toString()
         : "1";
 
-    const tareaEditada: IProyecto = {
-      id: proyecto ? proyecto.id : nextId,
+    const tareaEditada: ITareaBacklog = {
+      id: tarea ? tarea.id : nextId,
       nombre,
       descripcion,
       fechaInicio,
       fechaFin,
     };
 
-    if (proyecto) {
+    if (tarea) {
       await updateTareaController(tareaEditada); // Función para actualizar
     } else {
       await createTareaController(tareaEditada); // Función para crear
     }
 
-    refreshProyectos();
+    refreshTareas();
     closeModal();
   };
+
+  const handleCreateTareaSprint = async () => {
+
+    if (!nombre || !descripcion || !fechaFin || !idSprint) {
+      Swal.fire({
+        icon: "warning",
+        title: "Campos incompletos",
+        text: "Por favor, completa todos los campos y asegúrate de seleccionar un Sprint antes de continuar.",
+        confirmButtonColor: "#3085d6",
+      });
+      return;
+    }
+
+    const tareaNueva = {
+      titulo: nombre,
+      descripcion,
+      fechaLimite: fechaFin,
+    };
+
+    // Llamamos a la función para crear una tarea dentro del Sprint usando el idSprint obtenido de la URL
+    await createTareaSprint(idSprint, tareaNueva);
+
+    refreshTareas();
+    closeModal();
+  };
+  
 
   return (
     <div className={styles.proyectoModal}>
       <div className={styles.proyectoModalContent}>
         <h2 className={styles.proyectoModalTitle}>
-          {proyecto ? "Editar Tarea" : "Crear Nueva Tarea"}
+          {tarea ? "Editar Tarea" : "Crear Nueva Tarea"}
         </h2>
 
         <div className={styles.proyectoFormGroup}>
@@ -116,8 +146,11 @@ const ProyectoModal = ({ closeModal, refreshProyectos, proyecto }: ProyectoModal
           <button className={styles.proyectoButtonCancel} onClick={closeModal}>
             Cancelar
           </button>
-          <button className={styles.proyectoButton} onClick={handleCreateProject}>
-            {proyecto ? "Guardar Cambios" : "Crear Tarea"}
+          <button
+            className={styles.proyectoButton}
+            onClick={esBacklog ? handleCreateTareaBacklog : handleCreateTareaSprint}
+            >
+            {tarea ? "Guardar Cambios" : "Crear Tarea"}
           </button>
         </div>
       </div>
@@ -125,4 +158,4 @@ const ProyectoModal = ({ closeModal, refreshProyectos, proyecto }: ProyectoModal
   );
 };
 
-export default ProyectoModal;
+export default TareaModal;

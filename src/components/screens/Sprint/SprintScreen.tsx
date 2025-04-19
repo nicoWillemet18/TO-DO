@@ -2,39 +2,54 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { ISprint } from "../../../types/ISprint";
-
 import styles from "./SprintScreen.module.css";
+import { moverTareaABacklogController } from "../../../data/sprintController";
+import TareaModal from "../../ui/Modal/Modal"; // <-- asegúrate que el path sea correcto
 
 const SprintScreen = () => {
   const { id } = useParams<{ id: string }>();
   const [sprint, setSprint] = useState<ISprint | null>(null);
-  const [allSprints, setAllSprints] = useState<ISprint[]>([]); // 🔹 Lista completa
+  const [allSprints, setAllSprints] = useState<ISprint[]>([]);
+  const [showModal, setShowModal] = useState(false);
 
-  // 🔹 Cargar sprint desde la lista general
   useEffect(() => {
-    const fetchSprint = async () => {
-      try {
-        const response = await axios.get<{ listSprints: ISprint[] }>("http://localhost:3000/Sprints");
-        const sprints = response.data.listSprints;
-        const sprintEncontrado = sprints.find(s => s.id === id);
-
-        setAllSprints(sprints);
-        if (sprintEncontrado) setSprint(sprintEncontrado);
-        else console.warn("⚠ Sprint no encontrado");
-      } catch (error) {
-        console.error("❌ Error cargando sprint:", error);
-      }
-    };
-
     fetchSprint();
   }, [id]);
 
-  // 🔹 Actualizar estado de una tarea dentro del sprint
+  const fetchSprint = async () => {
+    try {
+      const response = await axios.get<{ listSprints: ISprint[] }>("http://localhost:3000/Sprints");
+      const sprints = response.data.listSprints;
+      const sprintEncontrado = sprints.find(s => s.id === id);
+
+      setAllSprints(sprints);
+      if (sprintEncontrado) setSprint(sprintEncontrado);
+      else console.warn("⚠ Sprint no encontrado");
+    } catch (error) {
+      console.error("❌ Error cargando sprint:", error);
+    }
+  };
+
   const actualizarEstadoTarea = async (
     tareaId: number,
     nuevoEstado: "pendiente" | "en-progreso" | "completado" | "backlog"
   ) => {
     if (!sprint) return;
+
+    const tarea = sprint.tareas.find(t => t.id === tareaId);
+    if (!tarea) return;
+
+    if (nuevoEstado === "backlog") {
+      await moverTareaABacklogController(sprint.id, tareaId);
+
+      const tareasActualizadas = sprint.tareas.filter(t => t.id !== tareaId);
+      const sprintActualizado = { ...sprint, tareas: tareasActualizadas };
+      const nuevosSprints = allSprints.map(s => s.id === sprint.id ? sprintActualizado : s);
+
+      setSprint(sprintActualizado);
+      setAllSprints(nuevosSprints);
+      return;
+    }
 
     const nuevasTareas = sprint.tareas.map(t =>
       t.id === tareaId ? { ...t, estado: nuevoEstado } : t
@@ -70,11 +85,12 @@ const SprintScreen = () => {
           <h2 className={styles.sprintTitle}>Nombre de la Sprint: {sprint.nombre}</h2>
           <p className={styles.subtitle}>Tareas en la sprint</p>
         </div>
-        <button className={styles.createButton}>+ Crear tarea</button>
+        <button className={styles.createButton} onClick={() => setShowModal(true)}>
+          + Crear tarea
+        </button>
       </div>
 
       <div className={styles.columns}>
-        {/* 🔸 Pendiente */}
         <div className={styles.column}>
           <h3>Pendiente</h3>
           {tareasPendientes.map(t => (
@@ -90,7 +106,6 @@ const SprintScreen = () => {
           ))}
         </div>
 
-        {/* 🔸 En progreso */}
         <div className={styles.column}>
           <h3>En progreso</h3>
           {tareasEnProgreso.map(t => (
@@ -107,7 +122,6 @@ const SprintScreen = () => {
           ))}
         </div>
 
-        {/* 🔸 Completado */}
         <div className={styles.column}>
           <h3>Completado</h3>
           {tareasCompletadas.map(t => (
@@ -123,6 +137,14 @@ const SprintScreen = () => {
           ))}
         </div>
       </div>
+
+      {showModal && (
+        <TareaModal
+          closeModal={() => setShowModal(false)}
+          refreshTareas={fetchSprint}
+          idSprint={id}
+        />
+      )}
     </div>
   );
 };

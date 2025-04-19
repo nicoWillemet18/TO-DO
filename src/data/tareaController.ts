@@ -1,13 +1,13 @@
 import axios from "axios"; // Importamos axios para realizar peticiones HTTP
-import { IProyecto } from "../types/Iinterfaces"; // Importamos la interfaz IProyecto
+import { ITareaBacklog } from "../types/ITareaBacklog"; // Importamos la interfaz IProyecto
 import { API_URL } from "../utils/constantes"; // Importamos la URL base de la API
-import { putProyectList } from "../http/proyectoList"; // Importamos la función para actualizar la lista de proyectos
+import { putTareaList } from "../http/tareaList";
 
 // 🔹 Función para obtener todas las tareas del Backlog
-export const getTareasController = async (): Promise<IProyecto[] | undefined> => {
+export const getTareasController = async (): Promise<ITareaBacklog[] | undefined> => {
   try {
     // Hacemos una petición GET a la API para obtener las tareas
-    const response = await axios.get<{ Tareas: IProyecto[] }>(API_URL);
+    const response = await axios.get<{ Tareas: ITareaBacklog[] }>(API_URL);
     return response.data.Tareas; // Retornamos la lista de tareas
   } catch (error) {
     console.log("Problemas en getTareasController", error); // Manejamos errores
@@ -15,17 +15,17 @@ export const getTareasController = async (): Promise<IProyecto[] | undefined> =>
 };
 
 // 🔹 Función para crear una nueva tarea en el Backlog
-export const createTareaController = async (tareaNueva: IProyecto) => {
+export const createTareaController = async (tareaNueva: ITareaBacklog) => {
   try {
     // Obtenemos la lista de tareas actuales
     const tareasBd = await getTareasController();
 
     if (tareasBd) {
       // Si existen tareas, agregamos la nueva a la lista y actualizamos
-      await putProyectList([...tareasBd, tareaNueva]);
+      await putTareaList([...tareasBd, tareaNueva]);
     } else {
       // Si no existen tareas, creamos la lista con la nueva tarea
-      await putProyectList([tareaNueva]);
+      await putTareaList([tareaNueva]);
     }
 
     return tareaNueva; // Retornamos la tarea creada
@@ -35,7 +35,7 @@ export const createTareaController = async (tareaNueva: IProyecto) => {
 };
 
 // 🔹 Función para actualizar una tarea existente
-export const updateTareaController = async (tareaActualizada: IProyecto) => {
+export const updateTareaController = async (tareaActualizada: ITareaBacklog) => {
   try {
     // Obtenemos la lista de tareas actuales
     const tareasBd = await getTareasController();
@@ -48,7 +48,7 @@ export const updateTareaController = async (tareaActualizada: IProyecto) => {
           : tareaBd
       );
 
-      await putProyectList(result); // Guardamos la nueva lista de tareas
+      await putTareaList(result); // Guardamos la nueva lista de tareas
     }
     return tareaActualizada; // Retornamos la tarea actualizada
   } catch (error) {
@@ -66,9 +66,11 @@ export const deleteTareaController = async (idTareaAEliminar: string) => {
       // Filtramos la lista eliminando la tarea con el ID dado
       const result = tareasBd.filter((tareaBd) => tareaBd.id !== idTareaAEliminar);
 
-      await putProyectList(result); // Guardamos la nueva lista sin la tarea eliminada
+      await putTareaList(result); // Guardamos la nueva lista sin la tarea eliminada
     }
   } catch (error) {
     console.log("Error en deleteTareaController", error);
   }
 };
+
+

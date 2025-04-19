@@ -11,8 +11,10 @@
 
 .sprintCardContainer{
   display: flex;
+  height: 100%;
   flex-direction: column;
   gap: 0.5rem;
+  overflow: scroll;
 }
 
 .fullHeightBox {
@@ -53,11 +55,10 @@
   flex-direction: column;
   gap: 0.5rem;
   background-color: white;
-  height: 83vh;
+  height: 81vh;
   padding: 0.4rem;
   border-radius:0.5rem;
   width: 95%;
-  overflow: scroll;
 }
 
 div::-webkit-scrollbar {

@@ -2,25 +2,32 @@
   "Backlog": {
     "Tareas": [
       {
-        "id": "2",
+        "id": "1",
         "nombre": "Primer tarea",
         "descripcion": "Esta es una tarea de ejemplo para el curso.",
         "fechaInicio": "2025-01-01",
         "fechaFin": "2025-06-30"
       },
       {
-        "id": "3",
+        "id": "2",
         "nombre": "TP. Intermedio",
         "descripcion": "Avanzar hasta la funcion delete",
         "fechaInicio": "2025-03-30",
         "fechaFin": "2025-04-05"
       },
       {
+        "id": "3",
+        "nombre": "Tarea prueba",
+        "descripcion": "Pruebas finales",
+        "fechaInicio": "2025-04-19",
+        "fechaFin": "2025-04-25"
+      },
+      {
         "id": "4",
-        "nombre": "TareaPrueba",
-        "descripcion": "Nisdas",
-        "fechaInicio": "2025-04-18",
-        "fechaFin": "2025-04-24"
+        "nombre": "dfgds",
+        "descripcion": "dfsd",
+        "fechaInicio": "2025-04-24",
+        "fechaFin": "2025-04-14"
       }
     ]
   },
@@ -28,64 +35,111 @@
     "listSprints": [
       {
         "id": "1",
-        "nombre": "Sprint de Inicio",
+        "nombre": "Inicio",
         "inicio": "2025-03-01",
         "fin": "2025-03-07",
         "tareas": [
           {
-            "id": 1,
+            "id": 9,
             "titulo": "Diseñar login",
             "descripcion": "Diseño visual de la pantalla de login",
-            "estado": "en-progreso"
+            "estado": "pendiente",
+            "fechaLimite": "2025-04-19"
           },
           {
-            "id": 2,
-            "titulo": "Configurar entorno",
-            "descripcion": "Instalación de dependencias y estructura base",
-            "estado": "completado"
-          },
-          {
-            "id": 3,
+            "id": 11,
             "titulo": "Revisión de código",
             "descripcion": "Revisar componentes del primer sprint",
-            "estado": "pendiente"
+            "estado": "completado",
+            "fechaLimite": "2025-04-19"
+          },
+          {
+            "id": 13,
+            "titulo": "Configurar entorno",
+            "descripcion": "Instalación de dependencias y estructura base",
+            "estado": "en-progreso",
+            "fechaLimite": "2025-04-19"
           }
         ]
       },
       {
         "id": "2",
-        "nombre": "Sprint de Integración",
+        "nombre": "Integración",
         "inicio": "2025-03-12",
         "fin": "2025-03-15",
         "tareas": [
           {
-            "id": 4,
+            "id": 8,
+            "titulo": "Pruebas unitarias",
+            "descripcion": "Crear pruebas para componentes principales",
+            "estado": "completado",
+            "fechaLimite": "2025-04-29"
+          },
+          {
+            "id": 12,
             "titulo": "Integrar API",
             "descripcion": "Conectar frontend con backend",
             "estado": "pendiente",
             "fechaLimite": "2025-04-20"
           },
           {
-            "id": 5,
-            "titulo": "Pruebas unitarias",
-            "descripcion": "Crear pruebas para componentes principales",
-            "estado": "completado",
-            "fechaLimite": "2025-04-29"
+            "id": "3",
+            "titulo": "Medio proyecto",
+            "descripcion": "Falta la mitad",
+            "fechaLimite": "2025-04-25",
+            "estado": "en-progreso"
           }
         ]
       },
       {
         "id": "3",
-        "nombre": "Sprint Prueba",
+        "nombre": "Pruebas",
         "inicio": "2025-04-18",
         "fin": "2025-04-24",
-        "tareas": []
+        "tareas": [
+          {
+            "id": "1",
+            "titulo": "Prueba Final",
+            "descripcion": "Revisar todos los errores",
+            "fechaLimite": "2025-04-30",
+            "estado": "completado"
+          },
+          {
+            "id": "2",
+            "titulo": "Inicio de Backend",
+            "descripcion": "Crear la estrucutura del proyecto",
+            "fechaLimite": "2025-04-20",
+            "estado": "pendiente"
+          }
+        ]
       },
       {
         "id": "4",
-        "nombre": "Otra",
-        "inicio": "2025-04-18",
-        "fin": "2025-04-25",
+        "nombre": "TO-DO",
+        "inicio": "2025-04-03",
+        "fin": "2025-04-18",
+        "tareas": [
+          {
+            "id": "1",
+            "titulo": "Controlar rutas",
+            "descripcion": "Hacer controles necesarios",
+            "fechaLimite": "2025-05-01",
+            "estado": "pendiente"
+          },
+          {
+            "id": "2",
+            "titulo": "ReacRouter",
+            "descripcion": "Aplicar ReactRouter al proyecto",
+            "fechaLimite": "2025-04-14",
+            "estado": "completado"
+          }
+        ]
+      },
+      {
+        "id": "5",
+        "nombre": "Ultimo Sprint",
+        "inicio": "2025-04-10",
+        "fin": "2025-04-30",
         "tareas": []
       }
     ]

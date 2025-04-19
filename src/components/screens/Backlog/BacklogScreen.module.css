@@ -1,3 +1,59 @@
-.container{
+.containerBacklog {
+  flex-grow: 1;
   display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  height: 92vh;
+  padding: 1rem;
+  overflow: scroll;
+}
+
+.containerTareas{
+  flex-grow: 1;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  height: 92vh;
+  padding: 1rem;
+  overflow: scroll;
+}
+
+div::-webkit-scrollbar {
+  display: none;
+}
+
+.headerBacklog {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 1rem;
+}
+
+.title {
+  color: #000;
+  font-size: 40px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.buttonTask {
+  font-size: larger;
+  height: 75%;
+  border: none;
+  font-weight: 700;
+  background-color: #0D7DD8;
+  padding: 0.5rem 0.5rem;
+  display: flex;
+  border-radius: 0.5rem;
+  gap: 5px;
+  align-items: center;
+}
+
+.buttonTask i {
+  font-size: 2rem; 
+  margin-top: 0.2rem;
+}
+
+.buttonTask:hover {
+  cursor: pointer;
 }
