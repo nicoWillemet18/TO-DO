@@ -21,13 +21,6 @@
         "descripcion": "Pruebas finales",
         "fechaInicio": "2025-04-19",
         "fechaFin": "2025-04-25"
-      },
-      {
-        "id": "4",
-        "nombre": "dfgds",
-        "descripcion": "dfsd",
-        "fechaInicio": "2025-04-24",
-        "fechaFin": "2025-04-14"
       }
     ]
   },
@@ -88,6 +81,13 @@
             "descripcion": "Falta la mitad",
             "fechaLimite": "2025-04-25",
             "estado": "en-progreso"
+          },
+          {
+            "id": "4",
+            "titulo": "Revision de base de datos",
+            "descripcion": "Controlar productos",
+            "fechaLimite": "2025-04-29",
+            "estado": "en-progreso"
           }
         ]
       },
@@ -140,7 +140,15 @@
         "nombre": "Ultimo Sprint",
         "inicio": "2025-04-10",
         "fin": "2025-04-30",
-        "tareas": []
+        "tareas": [
+          {
+            "id": "1",
+            "titulo": "ultima tarea",
+            "descripcion": "local",
+            "fechaLimite": "2025-04-29",
+            "estado": "en-progreso"
+          }
+        ]
       }
     ]
   }

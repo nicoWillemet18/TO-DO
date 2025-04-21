@@ -11,13 +11,11 @@ function App() {
       <Header />
       <div style={{ display: "flex" }}>
         <SprintsAside />
-        <div style={{ flex: 1 }}>
           <Routes>
             <Route path="/" element={<BacklogScreen />} />
             <Route path="/sprint/:id" element={<SprintScreen />} />
           </Routes>
         </div>
-      </div>
     </>
   );
 }

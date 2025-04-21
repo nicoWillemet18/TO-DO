@@ -106,20 +106,23 @@ const SprintScreen = () => {
           ))}
         </div>
 
+        
         <div className={styles.column}>
           <h3>En progreso</h3>
-          {tareasEnProgreso.map(t => (
-            <div key={t.id} className={styles.taskCard}>
-              <p>{t.titulo}</p>
-              <p className={styles.descripcion}>{t.descripcion}</p>
-              <p className={styles.fecha}>Fecha límite: {t.fechaLimite}</p>
-              <div className={styles.actions}>
-                <button onClick={() => actualizarEstadoTarea(t.id, "pendiente")}>⬅ Pendiente</button>
-                <button onClick={() => actualizarEstadoTarea(t.id, "completado")}>✅ Completado</button>
-                <button onClick={() => actualizarEstadoTarea(t.id, "backlog")}>⬅ Backlog</button>
+          <div className={styles.scrollArea}>
+            {tareasEnProgreso.map(t => (
+              <div key={t.id} className={styles.taskCard}>
+                <p>{t.titulo}</p>
+                <p className={styles.descripcion}>{t.descripcion}</p>
+                <p className={styles.fecha}>Fecha límite: {t.fechaLimite}</p>
+                <div className={styles.actions}>
+                  <button onClick={() => actualizarEstadoTarea(t.id, "pendiente")}>⬅ Pendiente</button>
+                  <button onClick={() => actualizarEstadoTarea(t.id, "completado")}>✅ Completado</button>
+                  <button onClick={() => actualizarEstadoTarea(t.id, "backlog")}>⬅ Backlog</button>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         <div className={styles.column}>
