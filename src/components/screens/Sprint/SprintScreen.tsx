@@ -12,10 +12,12 @@ const SprintScreen = () => {
   const [allSprints, setAllSprints] = useState<ISprint[]>([]);
   const [showModal, setShowModal] = useState(false);
 
+  // Al montar o cuando cambia el ID del sprint, lo traigo desde la API
   useEffect(() => {
     fetchSprint();
   }, [id]);
 
+  // Obtengo todos los sprints y filtro el que coincide con el ID actual
   const fetchSprint = async () => {
     try {
       const response = await axios.get<{ listSprints: ISprint[] }>("http://localhost:3000/Sprints");
@@ -30,6 +32,7 @@ const SprintScreen = () => {
     }
   };
 
+  // Cambia el estado de una tarea dentro del sprint (incluye lógica para mover a backlog)
   const actualizarEstadoTarea = async (
     tareaId: number,
     nuevoEstado: "pendiente" | "en-progreso" | "completado" | "backlog"
@@ -39,6 +42,7 @@ const SprintScreen = () => {
     const tarea = sprint.tareas.find(t => t.id === tareaId);
     if (!tarea) return;
 
+    // Si el nuevo estado es "backlog", se mueve la tarea fuera del sprint
     if (nuevoEstado === "backlog") {
       await moverTareaABacklogController(sprint.id, tareaId);
 
@@ -51,6 +55,7 @@ const SprintScreen = () => {
       return;
     }
 
+    // Si se cambia a otro estado dentro del sprint, se actualiza localmente y en la API
     const nuevasTareas = sprint.tareas.map(t =>
       t.id === tareaId ? { ...t, estado: nuevoEstado } : t
     );
@@ -72,8 +77,10 @@ const SprintScreen = () => {
     }
   };
 
+  // Mientras se carga el sprint
   if (!sprint) return <p>Cargando sprint...</p>;
 
+  // Separo las tareas según su estado para mostrarlas en columnas distintas
   const tareasPendientes = sprint.tareas.filter(t => t.estado === "pendiente");
   const tareasEnProgreso = sprint.tareas.filter(t => t.estado === "en-progreso");
   const tareasCompletadas = sprint.tareas.filter(t => t.estado === "completado");
@@ -90,6 +97,7 @@ const SprintScreen = () => {
         </button>
       </div>
 
+      {/* Columnas separadas por estado */}
       <div className={styles.columns}>
         <div className={styles.column}>
           <h3>Pendiente</h3>
@@ -106,7 +114,6 @@ const SprintScreen = () => {
           ))}
         </div>
 
-        
         <div className={styles.column}>
           <h3>En progreso</h3>
           <div className={styles.scrollArea}>
@@ -141,6 +148,7 @@ const SprintScreen = () => {
         </div>
       </div>
 
+      {/* Modal para crear una nueva tarea dentro del sprint */}
       {showModal && (
         <TareaModal
           closeModal={() => setShowModal(false)}

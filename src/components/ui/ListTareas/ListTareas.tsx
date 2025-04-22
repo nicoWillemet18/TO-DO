@@ -15,9 +15,10 @@ type IPropsIProyecto = {
   proyecto: ITareaBacklog;
   onEdit: () => void;
   onDelete: (id: string) => void;
-  setTareas: React.Dispatch<React.SetStateAction<ITareaBacklog[]>>; // 🔹 Agregá esta línea
+  setTareas: React.Dispatch<React.SetStateAction<ITareaBacklog[]>>; // 🔹 Actualiza el estado de tareas en el componente principal
 };
 
+// Función para formatear la fecha
 const formatearFecha = (fecha: string): string => {
   return new Date(fecha).toLocaleDateString("es-AR", {
     day: "2-digit",
@@ -26,11 +27,13 @@ const formatearFecha = (fecha: string): string => {
   });
 };
 
+// Componente principal para la lista de tareas
 const ListTareas: FC<IPropsIProyecto> = ({ proyecto, onEdit, onDelete, setTareas }) => {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [sprints, setSprints] = useState<ISprint[]>([]);
-  const [selectedSprint, setSelectedSprint] = useState<string>("");
+  const [modalIsOpen, setModalIsOpen] = useState(false); // Estado para controlar la apertura del modal
+  const [sprints, setSprints] = useState<ISprint[]>([]); // Estado para almacenar los sprints disponibles
+  const [selectedSprint, setSelectedSprint] = useState<string>(""); // Estado para la selección del sprint
 
+  // Cargar los sprints disponibles al montar el componente
   useEffect(() => {
     const fetchSprints = async () => {
       const data = await getSprintsController();
@@ -41,22 +44,24 @@ const ListTareas: FC<IPropsIProyecto> = ({ proyecto, onEdit, onDelete, setTareas
     };
 
     fetchSprints();
-  }, []);
+  }, []); // Este efecto se ejecuta una sola vez al cargar el componente
 
+  // Maneja el cambio de selección del sprint
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSprint(e.target.value);
   };
 
+  // Función para enviar la tarea al sprint seleccionado
   const handleEnviarTarea = async () => {
-    if (!selectedSprint) return;
-  
+    if (!selectedSprint) return; // Verifica si se ha seleccionado un sprint
+
     try {
       const sprints = await getSprintsController();
       if (!sprints) return;
-  
+
       const allTareas = sprints.flatMap((sprint) => sprint.tareas);
       const maxId = allTareas.reduce((max, tarea) => tarea.id > max ? tarea.id : max, 0);
-  
+
       const nuevaTarea: ITareaSprint = {
         id: maxId + 1,
         titulo: proyecto.nombre,
@@ -64,24 +69,20 @@ const ListTareas: FC<IPropsIProyecto> = ({ proyecto, onEdit, onDelete, setTareas
         estado: "pendiente",
         fechaLimite: proyecto.fechaFin
       };
-  
+
       // Añadir la tarea al Sprint
       await addTareaToSprintController(selectedSprint, nuevaTarea);
-  
+
       // Eliminar la tarea del Backlog
       await deleteTareaController(proyecto.id);
-  
+
       // Refrescar las tareas del Backlog después de eliminar
       const tareasActualizadas = await getTareasController();
       setTareas(tareasActualizadas || []);
-  
     } catch (error) {
-      console.error("Error al enviar la tarea", error);
+      console.error("Error al enviar la tarea", error); // Manejo de errores
     }
   };
-  
-  
-  
 
   return (
     <div className={styles.proyecto}>
@@ -102,7 +103,7 @@ const ListTareas: FC<IPropsIProyecto> = ({ proyecto, onEdit, onDelete, setTareas
             className={styles.enviar}
             style={{ maxWidth: "200px" }}
             disabled={!selectedSprint}
-            onClick={handleEnviarTarea}
+            onClick={handleEnviarTarea} // Al hacer click, enviar la tarea al sprint
           >
             Enviar a <BsDropbox className={styles.icon} />
           </button>
@@ -125,7 +126,7 @@ const ListTareas: FC<IPropsIProyecto> = ({ proyecto, onEdit, onDelete, setTareas
             <select
               className={styles.select}
               value={selectedSprint}
-              onChange={handleSelectChange}
+              onChange={handleSelectChange} // Cambiar sprint seleccionado
             >
               <option value="">Seleccione un Sprint</option>
               {sprints.length > 0 ? (
@@ -156,9 +157,10 @@ const ListTareas: FC<IPropsIProyecto> = ({ proyecto, onEdit, onDelete, setTareas
         </div>        
       </div>
 
+      {/* Modal para ver detalles del proyecto */}
       <Modal
         isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)}
+        onRequestClose={() => setModalIsOpen(false)} // Cerrar modal
         contentLabel="Detalles del Proyecto"
         className={styles.modal}
         overlayClassName={styles.overlay}
@@ -176,7 +178,7 @@ const ListTareas: FC<IPropsIProyecto> = ({ proyecto, onEdit, onDelete, setTareas
           </p>
           <button
             className={styles.modalCloseButton}
-            onClick={() => setModalIsOpen(false)}
+            onClick={() => setModalIsOpen(false)} // Cerrar el modal
           >
             Cerrar
           </button>

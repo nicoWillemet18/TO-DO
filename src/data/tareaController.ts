@@ -1,6 +1,6 @@
-import axios from "axios"; // Importamos axios para realizar peticiones HTTP
-import { ITareaBacklog } from "../types/ITareaBacklog"; // Importamos la interfaz IProyecto
-import { API_URL } from "../utils/constantes"; // Importamos la URL base de la API
+import axios from "axios";
+import { ITareaBacklog } from "../types/ITareaBacklog";
+import { API_URL } from "../utils/constantes";
 import { putTareaList } from "../http/tareaList";
 
 // 🔹 Función para obtener todas las tareas del Backlog

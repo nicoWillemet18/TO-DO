@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { deleteTareaController, getTareasController } from "../../../data/tareaController"; // Usando las funciones actualizadas
+import { deleteTareaController, getTareasController } from "../../../data/tareaController"; 
 import ListTareas from "../../ui/ListTareas/ListTareas";
 import Modal from "../../ui/Modal/Modal"; 
 import styles from "./BacklogScreen.module.css";
@@ -12,9 +12,10 @@ const Backlog = () => {
   const [showModal, setShowModal] = useState(false); 
   const [tareaSeleccionada, setTareaSeleccionada] = useState<ITareaBacklog | undefined>(undefined); 
 
+  // Al montar el componente, traigo todas las tareas del backlog
   useEffect(() => {
     const fetchTareas = async () => {
-      const proyectosData = await getTareasController(); // Cambié de getProyectosController a getTareasController
+      const proyectosData = await getTareasController(); 
       if (proyectosData) {
         setTareas(proyectosData);
       }
@@ -23,20 +24,24 @@ const Backlog = () => {
     fetchTareas();
   }, []);
 
+  // Abre el modal para crear una nueva tarea
   const openModalCrear = () => {
     setTareaSeleccionada(undefined);
     setShowModal(true);
   };
 
+  // Abre el modal con una tarea ya seleccionada para editar
   const openModalEditar = (proyecto: ITareaBacklog) => {
     setTareaSeleccionada(proyecto);
     setShowModal(true);
   };
 
+  // Cierra el modal sin guardar cambios
   const closeModal = () => {
     setShowModal(false);
   };
 
+  // Maneja la eliminación de una tarea con confirmación
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
       title: "¿Estás seguro?",
@@ -52,10 +57,11 @@ const Backlog = () => {
     if (result.isConfirmed) {
       await deleteTareaController(id);
       Swal.fire("Eliminado", "El proyecto ha sido eliminado.", "success");
-      refreshTareas(); // Refrescar la lista después de eliminar
+      refreshTareas();
     }
   };
 
+  // Refresca la lista de tareas desde la API
   const refreshTareas = async () => {
     const proyectosData = await getTareasController(); 
     setTareas(proyectosData || []);

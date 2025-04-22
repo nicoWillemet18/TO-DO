@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState, useEffect } from "react";
 import { ISprint } from "../../../types/ISprint";
 import {
   createSprintController,
@@ -21,22 +21,76 @@ const SprintModal = ({
   sprint,
   editMode = false,
 }: SprintModalProps) => {
+  // Estados para los campos del formulario
   const [nombre, setNombre] = useState<string>(sprint ? sprint.nombre : "");
   const [inicio, setInicio] = useState<string>(sprint ? sprint.inicio : "");
   const [fin, setFin] = useState<string>(sprint ? sprint.fin : "");
 
+  // Estado para los errores de validación
+  const [errores, setErrores] = useState({
+    nombre: "",
+    fechas: "",
+  });
+
+  // Determina si es el modo de solo vista
   const isViewMode = sprint && !editMode;
 
-  const handleCreateSprint = async () => {
+  useEffect(() => {
+    const nuevosErrores = {
+      nombre: "",
+      fechas: "",
+    };
+
+    // Validaciones
+    if (nombre.trim().length > 0 && nombre.trim().length < 3) {
+      nuevosErrores.nombre = "El nombre debe tener al menos 3 caracteres.";
+    }
+
+    if (inicio && fin && new Date(inicio) > new Date(fin)) {
+      nuevosErrores.fechas = "La fecha de inicio no puede ser mayor que la fecha de fin.";
+    }
+
+    setErrores(nuevosErrores);
+  }, [nombre, inicio, fin]);
+
+  // Función de validación de campos
+  const validarCampos = () => {
     if (!nombre || !inicio || !fin) {
       Swal.fire({
         icon: "warning",
         title: "Campos incompletos",
-        text: "Por favor, completa todos los campos antes de continuar.",
+        text: "Por favor, completa todos los campos.",
         confirmButtonColor: "#3085d6",
       });
-      return;
+      return false;
     }
+
+    if (nombre.trim().length < 3) {
+      Swal.fire({
+        icon: "warning",
+        title: "Nombre demasiado corto",
+        text: "El nombre debe tener al menos 3 caracteres.",
+        confirmButtonColor: "#3085d6",
+      });
+      return false;
+    }
+
+    if (new Date(inicio) > new Date(fin)) {
+      Swal.fire({
+        icon: "warning",
+        title: "Fechas inválidas",
+        text: "La fecha de inicio no puede ser mayor que la de fin.",
+        confirmButtonColor: "#3085d6",
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  // Función para crear un sprint
+  const handleCreateSprint = async () => {
+    if (!validarCampos()) return;
 
     const sprintsBd = (await getSprintsController()) || [];
     const nextId =
@@ -59,26 +113,17 @@ const SprintModal = ({
     closeModal();
   };
 
+  // Función para guardar los cambios de un sprint
   const handleSaveChanges = async () => {
-    if (!sprint) return;
-  
-    if (!nombre || !inicio || !fin) {
-      Swal.fire({
-        icon: "warning",
-        title: "Campos incompletos",
-        text: "Por favor, completa todos los campos.",
-        confirmButtonColor: "#3085d6",
-      });
-      return;
-    }
-  
+    if (!sprint || !validarCampos()) return;
+
     const sprintActualizado: ISprint = {
       ...sprint,
       nombre,
       inicio,
       fin,
     };
-  
+
     try {
       await updateSprintController(sprintActualizado);
       refreshSprints();
@@ -104,21 +149,26 @@ const SprintModal = ({
             : "Crear Nuevo Sprint"}
         </h2>
 
+        {/* Formulario para el nombre del sprint */}
         <div className={styles.proyectoFormGroup}>
           <label className={styles.proyectoLabel}>Nombre del Sprint:</label>
           {isViewMode ? (
             <p>{sprint?.nombre}</p>
           ) : (
-            <input
-              type="text"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              placeholder="Nombre del Sprint"
-              className={styles.proyectoInput}
-            />
+            <>
+              <input
+                type="text"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                placeholder="Nombre del Sprint"
+                className={styles.proyectoInput}
+              />
+              {errores.nombre && <p className={styles.error}>{errores.nombre}</p>}
+            </>
           )}
         </div>
 
+        {/* Formulario para la fecha de inicio */}
         <div className={styles.proyectoFormGroup}>
           <label className={styles.proyectoLabel}>Fecha de Inicio:</label>
           {isViewMode ? (
@@ -137,6 +187,7 @@ const SprintModal = ({
           )}
         </div>
 
+        {/* Formulario para la fecha de fin */}
         <div className={styles.proyectoFormGroup}>
           <label className={styles.proyectoLabel}>Fecha de Fin:</label>
           {isViewMode ? (
@@ -146,15 +197,19 @@ const SprintModal = ({
               year: "numeric"
             })}</p>
           ) : (
-            <input
-              type="date"
-              value={fin}
-              onChange={(e) => setFin(e.target.value)}
-              className={styles.proyectoInput}
-            />
+            <>
+              <input
+                type="date"
+                value={fin}
+                onChange={(e) => setFin(e.target.value)}
+                className={styles.proyectoInput}
+              />
+              {errores.fechas && <p className={styles.error}>{errores.fechas}</p>}
+            </>
           )}
         </div>
 
+        {/* Acciones del modal */}
         <div className={styles.proyectoModalActions}>
           <button className={styles.proyectoButtonCancel} onClick={closeModal}>
             {isViewMode ? "Cerrar" : "Cancelar"}

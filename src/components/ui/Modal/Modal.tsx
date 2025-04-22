@@ -4,7 +4,7 @@ import {
   createTareaController,
   getTareasController,
   updateTareaController,
-} from "../../../data/tareaController"; // Importando las funciones actualizadas
+} from "../../../data/tareaController";
 import styles from "./modal.module.css";
 import Swal from "sweetalert2";
 import { createTareaSprint } from "../../../data/sprintController";
@@ -15,15 +15,29 @@ type TareaModalProps = {
   tarea?: ITareaBacklog;
   idSprint?: string;
   esBacklog?: boolean;
-
 };
 
-const TareaModal = ({ closeModal, refreshTareas, tarea, idSprint, esBacklog}: TareaModalProps) => {
+const TareaModal = ({
+  closeModal,
+  refreshTareas,
+  tarea,
+  idSprint,
+  esBacklog,
+}: TareaModalProps) => {
+  // Estado para almacenar los valores de la tarea
   const [nombre, setNombre] = useState<string>("");
   const [descripcion, setDescripcion] = useState<string>("");
   const [fechaInicio, setFechaInicio] = useState<string>("");
   const [fechaFin, setFechaFin] = useState<string>("");
 
+  // Estado para los errores de validación
+  const [errores, setErrores] = useState({
+    nombre: "",
+    descripcion: "",
+    fechas: "",
+  });
+
+  // Efecto para cargar los datos de la tarea si existe
   useEffect(() => {
     if (tarea) {
       setNombre(tarea.nombre);
@@ -33,7 +47,31 @@ const TareaModal = ({ closeModal, refreshTareas, tarea, idSprint, esBacklog}: Ta
     }
   }, [tarea]);
 
-  const handleCreateTareaBacklog = async () => {
+  // Efecto para validar los campos de la tarea
+  useEffect(() => {
+    const nuevosErrores = {
+      nombre: "",
+      descripcion: "",
+      fechas: "",
+    };
+
+    if (nombre.trim().length > 0 && nombre.trim().length < 3) {
+      nuevosErrores.nombre = "El nombre debe tener al menos 3 caracteres.";
+    }
+
+    if (descripcion.trim().length > 0 && descripcion.trim().length < 3) {
+      nuevosErrores.descripcion = "La descripción debe tener al menos 3 caracteres.";
+    }
+
+    if (fechaInicio && fechaFin && new Date(fechaInicio) > new Date(fechaFin)) {
+      nuevosErrores.fechas = "La fecha de inicio no puede ser mayor que la fecha de fin.";
+    }
+
+    setErrores(nuevosErrores);
+  }, [nombre, descripcion, fechaInicio, fechaFin]);
+
+  // Función para validar los campos antes de crear o editar la tarea
+  const validarCampos = () => {
     if (!nombre || !descripcion || !fechaInicio || !fechaFin) {
       Swal.fire({
         icon: "warning",
@@ -41,13 +79,42 @@ const TareaModal = ({ closeModal, refreshTareas, tarea, idSprint, esBacklog}: Ta
         text: "Por favor, completa todos los campos antes de continuar.",
         confirmButtonColor: "#3085d6",
       });
-      return;
+      return false;
     }
+
+    if (nombre.trim().length < 3 || descripcion.trim().length < 3) {
+      Swal.fire({
+        icon: "warning",
+        title: "Texto demasiado corto",
+        text: "El nombre y la descripción deben tener al menos 3 caracteres.",
+        confirmButtonColor: "#3085d6",
+      });
+      return false;
+    }
+
+    if (new Date(fechaInicio) > new Date(fechaFin)) {
+      Swal.fire({
+        icon: "warning",
+        title: "Fechas inválidas",
+        text: "La fecha de inicio no puede ser mayor que la fecha de fin.",
+        confirmButtonColor: "#3085d6",
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  // Función para crear o actualizar una tarea en el backlog
+  const handleCreateTareaBacklog = async () => {
+    if (!validarCampos()) return;
 
     const tareasBd = (await getTareasController()) || [];
     const nextId =
       tareasBd.length > 0
-        ? (Math.max(...tareasBd.map((t: ITareaBacklog) => Number(t.id))) + 1).toString()
+        ? (
+            Math.max(...tareasBd.map((t: ITareaBacklog) => Number(t.id))) + 1
+          ).toString()
         : "1";
 
     const tareaEditada: ITareaBacklog = {
@@ -59,26 +126,18 @@ const TareaModal = ({ closeModal, refreshTareas, tarea, idSprint, esBacklog}: Ta
     };
 
     if (tarea) {
-      await updateTareaController(tareaEditada); // Función para actualizar
+      await updateTareaController(tareaEditada); // Actualiza la tarea
     } else {
-      await createTareaController(tareaEditada); // Función para crear
+      await createTareaController(tareaEditada); // Crea una nueva tarea
     }
 
     refreshTareas();
     closeModal();
   };
 
+  // Función para crear una tarea dentro de un sprint
   const handleCreateTareaSprint = async () => {
-
-    if (!nombre || !descripcion || !fechaFin || !idSprint) {
-      Swal.fire({
-        icon: "warning",
-        title: "Campos incompletos",
-        text: "Por favor, completa todos los campos y asegúrate de seleccionar un Sprint antes de continuar.",
-        confirmButtonColor: "#3085d6",
-      });
-      return;
-    }
+    if (!validarCampos() || !idSprint) return;
 
     const tareaNueva = {
       titulo: nombre,
@@ -86,13 +145,11 @@ const TareaModal = ({ closeModal, refreshTareas, tarea, idSprint, esBacklog}: Ta
       fechaLimite: fechaFin,
     };
 
-    // Llamamos a la función para crear una tarea dentro del Sprint usando el idSprint obtenido de la URL
-    await createTareaSprint(idSprint, tareaNueva);
+    await createTareaSprint(idSprint, tareaNueva); // Crea la tarea en el sprint
 
     refreshTareas();
     closeModal();
   };
-  
 
   return (
     <div className={styles.proyectoModal}>
@@ -110,6 +167,7 @@ const TareaModal = ({ closeModal, refreshTareas, tarea, idSprint, esBacklog}: Ta
             placeholder="Nombre de la tarea"
             className={styles.proyectoInput}
           />
+          {errores.nombre && <p className={styles.error}>{errores.nombre}</p>}
         </div>
 
         <div className={styles.proyectoFormGroup}>
@@ -120,6 +178,7 @@ const TareaModal = ({ closeModal, refreshTareas, tarea, idSprint, esBacklog}: Ta
             placeholder="Descripción de la tarea"
             className={styles.proyectoTextarea}
           />
+          {errores.descripcion && <p className={styles.error}>{errores.descripcion}</p>}
         </div>
 
         <div className={styles.proyectoFormGroup}>
@@ -140,6 +199,7 @@ const TareaModal = ({ closeModal, refreshTareas, tarea, idSprint, esBacklog}: Ta
             onChange={(e) => setFechaFin(e.target.value)}
             className={styles.proyectoInput}
           />
+          {errores.fechas && <p className={styles.error}>{errores.fechas}</p>}
         </div>
 
         <div className={styles.proyectoModalActions}>
@@ -149,7 +209,7 @@ const TareaModal = ({ closeModal, refreshTareas, tarea, idSprint, esBacklog}: Ta
           <button
             className={styles.proyectoButton}
             onClick={esBacklog ? handleCreateTareaBacklog : handleCreateTareaSprint}
-            >
+          >
             {tarea ? "Guardar Cambios" : "Crear Tarea"}
           </button>
         </div>

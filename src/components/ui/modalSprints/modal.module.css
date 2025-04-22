@@ -80,4 +80,10 @@
     font-size: 16px;
     cursor: pointer;
   }
+
+  .error {
+    color: red;
+    font-size: 0.85rem;
+    margin-top: 4px;
+  }
   

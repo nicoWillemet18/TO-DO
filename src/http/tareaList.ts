@@ -1,6 +1,6 @@
-import axios from "axios"; // Importamos axios para hacer solicitudes HTTP
-import { ITareaBacklog } from "../types/ITareaBacklog"; // Importamos la interfaz IProyecto
-import { API_URL } from "../utils/constantes"; // Importamos la URL base de la API
+import axios from "axios";
+import { ITareaBacklog } from "../types/ITareaBacklog";
+import { API_URL } from "../utils/constantes";
 
 // Función para actualizar el objeto global del json server
 export const putTareaList = async (proyectos: ITareaBacklog[]) => {

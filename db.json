@@ -147,6 +147,20 @@
             "descripcion": "local",
             "fechaLimite": "2025-04-29",
             "estado": "en-progreso"
+          },
+          {
+            "id": 14,
+            "titulo": "Form",
+            "descripcion": "Probando yup",
+            "estado": "completado",
+            "fechaLimite": "2025-04-23"
+          },
+          {
+            "id": "3",
+            "titulo": "Error en Yup",
+            "descripcion": "Buscando errores",
+            "fechaLimite": "2025-04-23",
+            "estado": "pendiente"
           }
         ]
       }
