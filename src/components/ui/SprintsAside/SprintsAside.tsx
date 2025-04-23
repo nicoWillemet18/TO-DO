@@ -8,6 +8,7 @@ import {
 } from "../../../data/sprintController";
 import styles from "./SprintsAside.module.css";
 import SprintModal from "../modalSprints/modalSprints";
+import Swal from "sweetalert2";
 
 const SprintsAside = () => {
   const navigate = useNavigate();
@@ -64,6 +65,9 @@ const SprintsAside = () => {
     await deleteSprintController(id); // Llama al controlador para eliminar el sprint
     const updatedSprints = sprints.filter((sprint) => sprint.id !== id); // Filtra el sprint eliminado
     setSprints(updatedSprints); // Actualiza el estado con los sprints restantes
+    
+    Swal.fire("Eliminado", "El sprint ha sido eliminado.", "success"); // Notificación de éxito
+
   };
 
   // Abre el modal en modo solo visualización para ver los detalles del sprint
