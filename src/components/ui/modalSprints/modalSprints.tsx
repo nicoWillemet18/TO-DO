@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { ISprint } from "../../../types/ISprint";
+import { v4 as uuidv4 } from "uuid";
 import {
   createSprintController,
-  getSprintsController,
   updateSprintController,
 } from "../../../data/sprintController";
 import styles from "./modal.module.css";
@@ -91,24 +91,22 @@ const SprintModal = ({
   // Función para crear un sprint
   const handleCreateSprint = async () => {
     if (!validarCampos()) return;
-
-    const sprintsBd = (await getSprintsController()) || [];
-    const nextId =
-      sprintsBd.length > 0
-        ? (
-            Math.max(...sprintsBd.map((s: ISprint) => Number(s.id))) + 1
-          ).toString()
-        : "1";
-
+  
     const sprintNuevo: ISprint = {
-      id: nextId,
+      id: uuidv4(),
       nombre,
       inicio,
       fin,
       tareas: [],
     };
-
+  
     await createSprintController(sprintNuevo);
+    Swal.fire({
+      icon: "success",
+      title: "Sprint creado",
+      text: "El sprint fue creado correctamente.",
+      confirmButtonColor: "#3085d6",
+    });
     refreshSprints();
     closeModal();
   };
@@ -126,6 +124,12 @@ const SprintModal = ({
 
     try {
       await updateSprintController(sprintActualizado);
+      Swal.fire({
+        icon: "success",
+        title: "Sprint actualizado",
+        text: "El sprint fue actualizado correctamente.",
+        confirmButtonColor: "#3085d6",
+      });
       refreshSprints();
       closeModal();
     } catch (error) {

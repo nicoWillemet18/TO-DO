@@ -1,162 +1,197 @@
 {
-  "Backlog": {
+  "backlog": {
     "Tareas": [
       {
-        "id": "1",
+        "id": "03b103a5-63c4-4101-9a3c-b2a56e02a6dc",
         "nombre": "Primer tarea",
         "descripcion": "Esta es una tarea de ejemplo para el curso.",
-        "fechaInicio": "2025-01-01",
-        "fechaFin": "2025-06-30"
+        "fechaInicio": "2025-04-01",
+        "fechaFin": "2025-04-30"
       },
       {
-        "id": "2",
+        "id": "2b3a8f40-7d52-4563-b2f4-a1054c562743",
         "nombre": "TP. Intermedio",
         "descripcion": "Avanzar hasta la funcion delete",
-        "fechaInicio": "2025-03-30",
-        "fechaFin": "2025-04-05"
+        "fechaInicio": "2025-03-31",
+        "fechaFin": "2025-04-16"
       },
       {
-        "id": "3",
-        "nombre": "Tarea prueba",
+        "id": "26a34d80-30d6-468b-bab8-ad080673caea",
+        "nombre": "Tarea Prueba",
         "descripcion": "Pruebas finales",
         "fechaInicio": "2025-04-23",
         "fechaFin": "2025-04-25"
+      },
+      {
+        "id": "b442f77e-b226-4622-851a-3ed19dd89e0b",
+        "nombre": "Verficacion de alertas",
+        "descripcion": "Controlar las alertas segun las acciones",
+        "fechaInicio": "2025-04-23",
+        "fechaFin": "2025-04-24"
       }
     ]
   },
-  "Sprints": {
+  "sprints": {
     "listSprints": [
       {
-        "id": "1",
+        "id": "d1266d34-be0b-464c-99ba-9c8464bdf844",
         "nombre": "Inicio",
-        "inicio": "2025-03-01",
-        "fin": "2025-03-07",
+        "inicio": "2025-04-01",
+        "fin": "2025-04-16",
         "tareas": [
           {
-            "id": 9,
+            "id": "fb902707-52f8-4e9d-a548-8fb88fd3f121",
             "titulo": "Diseñar login",
             "descripcion": "Diseño visual de la pantalla de login",
-            "estado": "pendiente",
-            "fechaLimite": "2025-04-19"
+            "fechaLimite": "2025-04-18",
+            "estado": "pendiente"
           },
           {
-            "id": 11,
+            "id": "591714cf-fa9c-41eb-a8d4-b24869d720d2",
             "titulo": "Revisión de código",
             "descripcion": "Revisar componentes del primer sprint",
-            "estado": "completado",
-            "fechaLimite": "2025-04-19"
+            "fechaLimite": "2025-04-25",
+            "estado": "completado"
           },
           {
-            "id": 13,
+            "id": "8f69c0ff-9793-423c-865c-9be10d364a1e",
             "titulo": "Configurar entorno",
             "descripcion": "Instalación de dependencias y estructura base",
-            "estado": "en-progreso",
-            "fechaLimite": "2025-04-19"
+            "fechaLimite": "2025-04-30",
+            "estado": "en-progreso"
           }
         ]
       },
       {
-        "id": "2",
+        "id": "5304da48-ab0a-401a-b4f1-1ce010e8eb80",
         "nombre": "Integración",
-        "inicio": "2025-03-12",
-        "fin": "2025-03-15",
+        "inicio": "2025-04-12",
+        "fin": "2025-04-15",
         "tareas": [
           {
-            "id": 8,
+            "id": "494f5175-e175-412c-9f12-b4f690a8ef21",
             "titulo": "Pruebas unitarias",
             "descripcion": "Crear pruebas para componentes principales",
-            "estado": "completado",
-            "fechaLimite": "2025-04-29"
+            "fechaLimite": "2025-04-29",
+            "estado": "completado"
           },
           {
-            "id": 12,
+            "id": "d4d0292d-2261-4c2e-b044-0a01197cdce2",
             "titulo": "Integrar API",
             "descripcion": "Conectar frontend con backend",
-            "estado": "pendiente",
-            "fechaLimite": "2025-04-20"
+            "fechaLimite": "2025-04-20",
+            "estado": "pendiente"
           },
           {
-            "id": "3",
+            "id": "e0c9d027-7e79-4a66-9b4b-f8fc50dcc574",
             "titulo": "Medio proyecto",
             "descripcion": "Falta la mitad",
             "fechaLimite": "2025-04-25",
             "estado": "en-progreso"
           },
           {
-            "id": "4",
+            "id": "e8986402-6ea1-404f-903a-b0ec29000ec8",
             "titulo": "Revision de base de datos",
             "descripcion": "Controlar productos",
-            "fechaLimite": "2025-04-29",
+            "fechaLimite": "2025-04-24",
             "estado": "en-progreso"
+          },
+          {
+            "id": "5bc3715f-1ec6-49d7-9a7a-8c0d3063df53",
+            "titulo": "Relleno",
+            "descripcion": "Verificar vista",
+            "fechaLimite": "2025-04-25",
+            "estado": "en-progreso"
+          },
+          {
+            "id": "b34c68be-6321-49b6-8860-62995a163eb0",
+            "titulo": "Vista Sprints",
+            "descripcion": "Relleno",
+            "fechaLimite": "2025-04-25",
+            "estado": "en-progreso"
+          },
+          {
+            "id": "c29d9e9a-9c8f-49ef-8ec8-f0bae2451f3a",
+            "titulo": "Validaciones formularios",
+            "descripcion": "Agregar YUP",
+            "fechaLimite": "2025-04-19",
+            "estado": "pendiente"
           }
         ]
       },
       {
-        "id": "3",
+        "id": "0bd00337-cb38-4b44-9d5a-03b0a9442cc3",
         "nombre": "Pruebas",
         "inicio": "2025-04-18",
         "fin": "2025-04-24",
         "tareas": [
           {
-            "id": "1",
+            "id": "900a1f2f-00fa-4db7-bcf3-79f9b22268f1",
             "titulo": "Prueba Final",
             "descripcion": "Revisar todos los errores",
             "fechaLimite": "2025-04-30",
             "estado": "completado"
           },
           {
-            "id": "2",
+            "id": "1528af86-5c75-4277-90f4-e22a8f9ea84c",
             "titulo": "Inicio de Backend",
             "descripcion": "Crear la estrucutura del proyecto",
-            "fechaLimite": "2025-04-20",
+            "fechaLimite": "2025-04-22",
             "estado": "pendiente"
           }
         ]
       },
       {
-        "id": "4",
+        "id": "5e8ad8fa-2472-4f09-ba4f-8cfab0bb619e",
         "nombre": "TO-DO",
-        "inicio": "2025-04-03",
+        "inicio": "2025-04-16",
         "fin": "2025-04-18",
         "tareas": [
           {
-            "id": "1",
+            "id": "e4928293-92eb-4974-8f91-91fef39234b3",
             "titulo": "Controlar rutas",
             "descripcion": "Hacer controles necesarios",
             "fechaLimite": "2025-05-01",
             "estado": "pendiente"
           },
           {
-            "id": "2",
+            "id": "2ab09688-a520-48a3-826d-a7e74ab0c3e2",
             "titulo": "ReacRouter",
             "descripcion": "Aplicar ReactRouter al proyecto",
-            "fechaLimite": "2025-04-14",
+            "fechaLimite": "2025-04-18",
             "estado": "completado"
+          },
+          {
+            "id": "438dbbbd-2554-4e92-be2f-b765983b67ae",
+            "titulo": "ids",
+            "descripcion": "ver ids",
+            "estado": "en-progreso",
+            "fechaLimite": "2025-04-24"
           }
         ]
       },
       {
-        "id": "5",
+        "id": "aced9c4f-8b46-46e2-9968-1be85a6892f1",
         "nombre": "Ultimo Sprint",
-        "inicio": "2025-04-10",
+        "inicio": "2025-04-17",
         "fin": "2025-04-30",
         "tareas": [
           {
-            "id": "1",
+            "id": "16e7c2a3-d181-44b3-a68f-788f237bf26e",
             "titulo": "ultima tarea",
             "descripcion": "local",
-            "fechaLimite": "2025-04-29",
+            "fechaLimite": "2025-05-02",
             "estado": "en-progreso"
           },
           {
-            "id": 14,
+            "id": "96b18562-7e6a-458d-935b-9f6f0b289a75",
             "titulo": "Form",
             "descripcion": "Probando yup",
-            "estado": "completado",
-            "fechaLimite": "2025-04-23"
+            "fechaLimite": "2025-04-30",
+            "estado": "completado"
           },
           {
-            "id": "3",
+            "id": "6732db62-b7ed-4927-9d7a-bc022458375d",
             "titulo": "Error en Yup",
             "descripcion": "Buscando errores",
             "fechaLimite": "2025-04-23",

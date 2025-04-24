@@ -4,23 +4,25 @@ import { useEffect, useState } from "react";
 import { ISprint } from "../../../types/ISprint";
 import styles from "./SprintScreen.module.css";
 import { moverTareaABacklogController } from "../../../data/sprintController";
-import TareaModal from "../../ui/Modal/Modal"; // <-- asegúrate que el path sea correcto
+import TareaModal from "../../ui/Modal/Modal";
+import Swal from "sweetalert2"; // Importar SweetAlert2
 
 const SprintScreen = () => {
+  // Obtener el ID del sprint desde los parámetros de la URL
   const { id } = useParams<{ id: string }>();
   const [sprint, setSprint] = useState<ISprint | null>(null);
   const [allSprints, setAllSprints] = useState<ISprint[]>([]);
   const [showModal, setShowModal] = useState(false);
 
-  // Al montar o cuando cambia el ID del sprint, lo traigo desde la API
+  // Cargar los datos del sprint cuando el componente se monta o cuando cambia el ID
   useEffect(() => {
     fetchSprint();
   }, [id]);
 
-  // Obtengo todos los sprints y filtro el que coincide con el ID actual
+  // Función para cargar los datos del sprint desde el backend
   const fetchSprint = async () => {
     try {
-      const response = await axios.get<{ listSprints: ISprint[] }>("http://localhost:3000/Sprints");
+      const response = await axios.get<{ listSprints: ISprint[] }>("http://localhost:3000/sprints");
       const sprints = response.data.listSprints;
       const sprintEncontrado = sprints.find(s => s.id === id);
 
@@ -32,9 +34,9 @@ const SprintScreen = () => {
     }
   };
 
-  // Cambia el estado de una tarea dentro del sprint (incluye lógica para mover a backlog)
+  // Función para actualizar el estado de una tarea dentro de un sprint
   const actualizarEstadoTarea = async (
-    tareaId: number,
+    tareaId: string,
     nuevoEstado: "pendiente" | "en-progreso" | "completado" | "backlog"
   ) => {
     if (!sprint) return;
@@ -42,20 +44,33 @@ const SprintScreen = () => {
     const tarea = sprint.tareas.find(t => t.id === tareaId);
     if (!tarea) return;
 
-    // Si el nuevo estado es "backlog", se mueve la tarea fuera del sprint
+    // Si el estado es "backlog", mover la tarea de vuelta al backlog
     if (nuevoEstado === "backlog") {
-      await moverTareaABacklogController(sprint.id, tareaId);
+      // Mostrar alerta de confirmación antes de mover la tarea al backlog
+      const result = await Swal.fire({
+        title: "¿Estás seguro?",
+        text: "¿Deseas mover esta tarea al backlog?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, mover al backlog",
+        cancelButtonText: "Cancelar"
+      });
 
-      const tareasActualizadas = sprint.tareas.filter(t => t.id !== tareaId);
-      const sprintActualizado = { ...sprint, tareas: tareasActualizadas };
-      const nuevosSprints = allSprints.map(s => s.id === sprint.id ? sprintActualizado : s);
+      if (result.isConfirmed) {
+        await moverTareaABacklogController(sprint.id, tareaId);
 
-      setSprint(sprintActualizado);
-      setAllSprints(nuevosSprints);
+        const tareasActualizadas = sprint.tareas.filter(t => t.id !== tareaId);
+        const sprintActualizado = { ...sprint, tareas: tareasActualizadas };
+        const nuevosSprints = allSprints.map(s => s.id === sprint.id ? sprintActualizado : s);
+
+        setSprint(sprintActualizado);
+        setAllSprints(nuevosSprints);
+        Swal.fire("Tarea movida", "La tarea ha sido movida al backlog.", "success");
+      }
       return;
     }
 
-    // Si se cambia a otro estado dentro del sprint, se actualiza localmente y en la API
+    // Actualizar el estado de la tarea
     const nuevasTareas = sprint.tareas.map(t =>
       t.id === tareaId ? { ...t, estado: nuevoEstado } : t
     );
@@ -66,7 +81,8 @@ const SprintScreen = () => {
     );
 
     try {
-      await axios.put("http://localhost:3000/Sprints", {
+      // Enviar los cambios al backend
+      await axios.put("http://localhost:3000/sprints", {
         listSprints: nuevosSprints
       });
 
@@ -77,10 +93,9 @@ const SprintScreen = () => {
     }
   };
 
-  // Mientras se carga el sprint
   if (!sprint) return <p>Cargando sprint...</p>;
 
-  // Separo las tareas según su estado para mostrarlas en columnas distintas
+  // Filtrar las tareas según su estado
   const tareasPendientes = sprint.tareas.filter(t => t.estado === "pendiente");
   const tareasEnProgreso = sprint.tareas.filter(t => t.estado === "en-progreso");
   const tareasCompletadas = sprint.tareas.filter(t => t.estado === "completado");
@@ -92,12 +107,12 @@ const SprintScreen = () => {
           <h2 className={styles.sprintTitle}>Nombre de la Sprint: {sprint.nombre}</h2>
           <p className={styles.subtitle}>Tareas en la sprint</p>
         </div>
+        {/* Botón para crear una nueva tarea */}
         <button className={styles.createButton} onClick={() => setShowModal(true)}>
           + Crear tarea
         </button>
       </div>
 
-      {/* Columnas separadas por estado */}
       <div className={styles.columns}>
         <div className={styles.column}>
           <h3>Pendiente</h3>
@@ -107,6 +122,7 @@ const SprintScreen = () => {
               <p className={styles.descripcion}>{t.descripcion}</p>
               <p className={styles.fecha}>Fecha límite: {t.fechaLimite}</p>
               <div className={styles.actions}>
+                {/* Botones para cambiar el estado de la tarea */}
                 <button onClick={() => actualizarEstadoTarea(t.id, "en-progreso")}>▶ En progreso</button>
                 <button onClick={() => actualizarEstadoTarea(t.id, "backlog")}>⬅ Backlog</button>
               </div>
@@ -123,6 +139,7 @@ const SprintScreen = () => {
                 <p className={styles.descripcion}>{t.descripcion}</p>
                 <p className={styles.fecha}>Fecha límite: {t.fechaLimite}</p>
                 <div className={styles.actions}>
+                  {/* Botones para cambiar el estado de la tarea */}
                   <button onClick={() => actualizarEstadoTarea(t.id, "pendiente")}>⬅ Pendiente</button>
                   <button onClick={() => actualizarEstadoTarea(t.id, "completado")}>✅ Completado</button>
                   <button onClick={() => actualizarEstadoTarea(t.id, "backlog")}>⬅ Backlog</button>
@@ -140,6 +157,7 @@ const SprintScreen = () => {
               <p className={styles.descripcion}>{t.descripcion}</p>
               <p className={styles.fecha}>Fecha límite: {t.fechaLimite}</p>
               <div className={styles.actions}>
+                {/* Botones para reabrir la tarea o moverla al backlog */}
                 <button onClick={() => actualizarEstadoTarea(t.id, "en-progreso")}>🔄 Reabrir</button>
                 <button onClick={() => actualizarEstadoTarea(t.id, "backlog")}>⬅ Backlog</button>
               </div>
@@ -148,7 +166,7 @@ const SprintScreen = () => {
         </div>
       </div>
 
-      {/* Modal para crear una nueva tarea dentro del sprint */}
+      {/* Modal para crear una nueva tarea */}
       {showModal && (
         <TareaModal
           closeModal={() => setShowModal(false)}

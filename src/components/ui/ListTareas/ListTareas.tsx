@@ -8,6 +8,7 @@ import Modal from "react-modal";
 import { addTareaToSprintController, getSprintsController } from "../../../data/sprintController";
 import { ITareaSprint } from "../../../types/ITareaSprint";
 import { deleteTareaController, getTareasController } from "../../../data/tareaController";
+import Swal from "sweetalert2";
 
 Modal.setAppElement("#root");
 
@@ -15,10 +16,9 @@ type IPropsIProyecto = {
   proyecto: ITareaBacklog;
   onEdit: () => void;
   onDelete: (id: string) => void;
-  setTareas: React.Dispatch<React.SetStateAction<ITareaBacklog[]>>; // 🔹 Actualiza el estado de tareas en el componente principal
+  setTareas: React.Dispatch<React.SetStateAction<ITareaBacklog[]>>;
 };
 
-// Función para formatear la fecha
 const formatearFecha = (fecha: string): string => {
   return new Date(fecha).toLocaleDateString("es-AR", {
     day: "2-digit",
@@ -27,60 +27,65 @@ const formatearFecha = (fecha: string): string => {
   });
 };
 
-// Componente principal para la lista de tareas
 const ListTareas: FC<IPropsIProyecto> = ({ proyecto, onEdit, onDelete, setTareas }) => {
-  const [modalIsOpen, setModalIsOpen] = useState(false); // Estado para controlar la apertura del modal
-  const [sprints, setSprints] = useState<ISprint[]>([]); // Estado para almacenar los sprints disponibles
-  const [selectedSprint, setSelectedSprint] = useState<string>(""); // Estado para la selección del sprint
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [sprints, setSprints] = useState<ISprint[]>([]);
+  const [selectedSprint, setSelectedSprint] = useState<string>("");
 
-  // Cargar los sprints disponibles al montar el componente
+  // Fetch de los sprints disponibles desde el servidor al montar el componente
   useEffect(() => {
     const fetchSprints = async () => {
       const data = await getSprintsController();
       if (data) {
         const validSprints = data.filter((sprint) => sprint.id && sprint.nombre);
-        setSprints(validSprints);
+        setSprints(validSprints); // Actualiza los sprints disponibles
       }
     };
 
     fetchSprints();
-  }, []); // Este efecto se ejecuta una sola vez al cargar el componente
+  }, []); // Se ejecuta una sola vez cuando el componente se monta
 
   // Maneja el cambio de selección del sprint
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedSprint(e.target.value);
+    setSelectedSprint(e.target.value); // Actualiza el sprint seleccionado
   };
 
-  // Función para enviar la tarea al sprint seleccionado
+  // Función para enviar la tarea seleccionada al sprint y eliminarla del backlog
   const handleEnviarTarea = async () => {
-    if (!selectedSprint) return; // Verifica si se ha seleccionado un sprint
+    if (!selectedSprint) return; // Verifica si un sprint ha sido seleccionado
 
-    try {
-      const sprints = await getSprintsController();
-      if (!sprints) return;
+    const result = await Swal.fire({
+      title: "Confirmación Necesaria",
+      text: "¿Deseas enviar esta tarea al sprint seleccionado?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, enviar",
+      cancelButtonText: "Cancelar"
+    });
 
-      const allTareas = sprints.flatMap((sprint) => sprint.tareas);
-      const maxId = allTareas.reduce((max, tarea) => tarea.id > max ? tarea.id : max, 0);
+    if (result.isConfirmed) {
+      try {
+        const tareaExistente: ITareaSprint = {
+          id: proyecto.id,
+          titulo: proyecto.nombre,
+          descripcion: proyecto.descripcion,
+          estado: "pendiente",
+          fechaLimite: proyecto.fechaFin
+        };
 
-      const nuevaTarea: ITareaSprint = {
-        id: maxId + 1,
-        titulo: proyecto.nombre,
-        descripcion: proyecto.descripcion,
-        estado: "pendiente",
-        fechaLimite: proyecto.fechaFin
-      };
+        // Envía la tarea al sprint y la elimina del backlog
+        await addTareaToSprintController(selectedSprint, tareaExistente);
+        await deleteTareaController(proyecto.id);
 
-      // Añadir la tarea al Sprint
-      await addTareaToSprintController(selectedSprint, nuevaTarea);
+        // Obtiene las tareas actualizadas y actualiza el estado
+        const tareasActualizadas = await getTareasController();
+        setTareas(tareasActualizadas || []); // Actualiza las tareas mostradas
 
-      // Eliminar la tarea del Backlog
-      await deleteTareaController(proyecto.id);
-
-      // Refrescar las tareas del Backlog después de eliminar
-      const tareasActualizadas = await getTareasController();
-      setTareas(tareasActualizadas || []);
-    } catch (error) {
-      console.error("Error al enviar la tarea", error); // Manejo de errores
+        Swal.fire("Tarea enviada", "La tarea ha sido enviada correctamente al sprint.", "success"); // Alerta de éxito
+      } catch (error) {
+        console.error("Error al enviar la tarea", error); // Maneja errores durante el proceso
+        Swal.fire("Error", "Hubo un problema al enviar la tarea.", "error"); // Alerta de error
+      }
     }
   };
 
@@ -92,10 +97,7 @@ const ListTareas: FC<IPropsIProyecto> = ({ proyecto, onEdit, onDelete, setTareas
             <strong>Nombre:</strong> {proyecto.nombre}
           </span>
 
-          <span
-            className={styles.fecha}
-            data-tooltip={`Fecha de Inicio: ${formatearFecha(proyecto.fechaInicio)}`}
-          >
+          <span className={styles.fecha} data-tooltip={`Fecha de Inicio: ${formatearFecha(proyecto.fechaInicio)}`}>
             <strong>Fecha de inicio:</strong> {formatearFecha(proyecto.fechaInicio)}
           </span>
 
@@ -103,22 +105,16 @@ const ListTareas: FC<IPropsIProyecto> = ({ proyecto, onEdit, onDelete, setTareas
             className={styles.enviar}
             style={{ maxWidth: "200px" }}
             disabled={!selectedSprint}
-            onClick={handleEnviarTarea} // Al hacer click, enviar la tarea al sprint
+            onClick={handleEnviarTarea} // Llama a la función para enviar la tarea
           >
             Enviar a <BsDropbox className={styles.icon} />
           </button>
 
-          <span
-            className={styles.descripcion}
-            data-tooltip={proyecto.descripcion}
-          >
+          <span className={styles.descripcion} data-tooltip={proyecto.descripcion}>
             <strong>Descripción:</strong> {proyecto.descripcion}
           </span>
 
-          <span
-            className={styles.fecha}
-            data-tooltip={`Fecha de Fin: ${formatearFecha(proyecto.fechaFin)}`}
-          >
+          <span className={styles.fecha} data-tooltip={`Fecha de Fin: ${formatearFecha(proyecto.fechaFin)}`}>
             <strong>Fecha de fin:</strong> {formatearFecha(proyecto.fechaFin)}
           </span>
 
@@ -126,7 +122,7 @@ const ListTareas: FC<IPropsIProyecto> = ({ proyecto, onEdit, onDelete, setTareas
             <select
               className={styles.select}
               value={selectedSprint}
-              onChange={handleSelectChange} // Cambiar sprint seleccionado
+              onChange={handleSelectChange} // Llama a la función que maneja el cambio de selección de sprint
             >
               <option value="">Seleccione un Sprint</option>
               {sprints.length > 0 ? (
@@ -154,31 +150,24 @@ const ListTareas: FC<IPropsIProyecto> = ({ proyecto, onEdit, onDelete, setTareas
           <button onClick={() => onDelete(proyecto.id)}>
             <FaTrash size={25} color="A90505" />
           </button>
-        </div>        
+        </div>
       </div>
 
-      {/* Modal para ver detalles del proyecto */}
       <Modal
         isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)} // Cerrar modal
+        onRequestClose={() => setModalIsOpen(false)} // Cierra el modal al solicitarlo
         contentLabel="Detalles del Proyecto"
         className={styles.modal}
         overlayClassName={styles.overlay}
       >
         <div className={styles.modalContent}>
           <h2 className={styles.modalTitle}>{proyecto.nombre}</h2>
-          <p>
-            <strong>Descripción:</strong> {proyecto.descripcion}
-          </p>
-          <p>
-            <strong>Fecha de Inicio:</strong> {formatearFecha(proyecto.fechaInicio)}
-          </p>
-          <p>
-            <strong>Fecha de Fin:</strong> {formatearFecha(proyecto.fechaFin)}
-          </p>
+          <p><strong>Descripción:</strong> {proyecto.descripcion}</p>
+          <p><strong>Fecha de Inicio:</strong> {formatearFecha(proyecto.fechaInicio)}</p>
+          <p><strong>Fecha de Fin:</strong> {formatearFecha(proyecto.fechaFin)}</p>
           <button
             className={styles.modalCloseButton}
-            onClick={() => setModalIsOpen(false)} // Cerrar el modal
+            onClick={() => setModalIsOpen(false)} // Cierra el modal al hacer clic en el botón
           >
             Cerrar
           </button>

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { ITareaBacklog } from "../../../types/ITareaBacklog";
 import {
   createTareaController,
-  getTareasController,
   updateTareaController,
 } from "../../../data/tareaController";
 import styles from "./modal.module.css";
@@ -24,20 +24,18 @@ const TareaModal = ({
   idSprint,
   esBacklog,
 }: TareaModalProps) => {
-  // Estado para almacenar los valores de la tarea
   const [nombre, setNombre] = useState<string>("");
   const [descripcion, setDescripcion] = useState<string>("");
   const [fechaInicio, setFechaInicio] = useState<string>("");
   const [fechaFin, setFechaFin] = useState<string>("");
 
-  // Estado para los errores de validación
   const [errores, setErrores] = useState({
     nombre: "",
     descripcion: "",
     fechas: "",
   });
 
-  // Efecto para cargar los datos de la tarea si existe
+  // Si estamos editando, cargamos los valores actuales de la tarea
   useEffect(() => {
     if (tarea) {
       setNombre(tarea.nombre);
@@ -47,7 +45,7 @@ const TareaModal = ({
     }
   }, [tarea]);
 
-  // Efecto para validar los campos de la tarea
+  // Validación reactiva para los campos
   useEffect(() => {
     const nuevosErrores = {
       nombre: "",
@@ -70,7 +68,6 @@ const TareaModal = ({
     setErrores(nuevosErrores);
   }, [nombre, descripcion, fechaInicio, fechaFin]);
 
-  // Función para validar los campos antes de crear o editar la tarea
   const validarCampos = () => {
     if (!nombre || !descripcion || !fechaInicio || !fechaFin) {
       Swal.fire({
@@ -105,20 +102,13 @@ const TareaModal = ({
     return true;
   };
 
-  // Función para crear o actualizar una tarea en el backlog
+  // Crear o editar tarea para el backlog
   const handleCreateTareaBacklog = async () => {
     if (!validarCampos()) return;
 
-    const tareasBd = (await getTareasController()) || [];
-    const nextId =
-      tareasBd.length > 0
-        ? (
-            Math.max(...tareasBd.map((t: ITareaBacklog) => Number(t.id))) + 1
-          ).toString()
-        : "1";
-
     const tareaEditada: ITareaBacklog = {
-      id: tarea ? tarea.id : nextId,
+      // Usamos uuid para generar un id único si es nueva
+      id: tarea ? tarea.id : uuidv4(),
       nombre,
       descripcion,
       fechaInicio,
@@ -126,16 +116,28 @@ const TareaModal = ({
     };
 
     if (tarea) {
-      await updateTareaController(tareaEditada); // Actualiza la tarea
+      await updateTareaController(tareaEditada);
+      Swal.fire({
+        icon: "success",
+        title: "Tarea actualizada",
+        text: "La tarea fue editada correctamente.",
+        confirmButtonColor: "#3085d6",
+      });
     } else {
-      await createTareaController(tareaEditada); // Crea una nueva tarea
+      await createTareaController(tareaEditada);
+      Swal.fire({
+        icon: "success",
+        title: "Tarea creada",
+        text: "La tarea fue creada exitosamente.",
+        confirmButtonColor: "#3085d6",
+      });
     }
 
     refreshTareas();
     closeModal();
   };
 
-  // Función para crear una tarea dentro de un sprint
+  // Crear tarea para el sprint correspondiente
   const handleCreateTareaSprint = async () => {
     if (!validarCampos() || !idSprint) return;
 
@@ -145,7 +147,14 @@ const TareaModal = ({
       fechaLimite: fechaFin,
     };
 
-    await createTareaSprint(idSprint, tareaNueva); // Crea la tarea en el sprint
+    await createTareaSprint(idSprint, tareaNueva);
+
+    Swal.fire({
+      icon: "success",
+      title: "Tarea creada",
+      text: "La tarea fue añadida al sprint correctamente.",
+      confirmButtonColor: "#3085d6",
+    });
 
     refreshTareas();
     closeModal();

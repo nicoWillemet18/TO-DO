@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ISprint } from "../types/ISprint";
 import { ITareaSprint } from "../types/ITareaSprint";
+import { v4 as uuidv4 } from "uuid";
 
 // 🔹 URL base del backend
 const API_BASE_URL = "http://localhost:3000";
@@ -8,7 +9,7 @@ const API_BASE_URL = "http://localhost:3000";
 // 🔹 Obtener todos los sprints
 export const getSprintsController = async (): Promise<ISprint[] | undefined> => {
   try {
-    const response = await axios.get<{ listSprints: ISprint[] }>(`${API_BASE_URL}/Sprints`);
+    const response = await axios.get<{ listSprints: ISprint[] }>(`${API_BASE_URL}/sprints`);
     return response.data.listSprints;
   } catch (error) {
     console.error("❌ Error en getSprintsController:", error);
@@ -23,7 +24,7 @@ export const createSprintController = async (sprint: ISprint): Promise<ISprint |
 
     const nuevaLista = [...sprints, sprint];
 
-    await axios.put(`${API_BASE_URL}/Sprints`, { listSprints: nuevaLista });
+    await axios.put(`${API_BASE_URL}/sprints`, { listSprints: nuevaLista });
 
     return sprint;
   } catch (error) {
@@ -39,7 +40,7 @@ export const deleteSprintController = async (id: string): Promise<void> => {
 
     const nuevaLista = sprints.filter((s) => s.id !== id);
 
-    await axios.put(`${API_BASE_URL}/Sprints`, { listSprints: nuevaLista });
+    await axios.put(`${API_BASE_URL}/sprints`, { listSprints: nuevaLista });
 
   } catch (error) {
     console.error("❌ Error en deleteSprintController:", error);
@@ -54,7 +55,7 @@ export const updateSprintController = async (sprint: ISprint): Promise<ISprint |
 
     const nuevaLista = sprints.map((s) => (s.id === sprint.id ? sprint : s));
 
-    await axios.put(`${API_BASE_URL}/Sprints`, { listSprints: nuevaLista });
+    await axios.put(`${API_BASE_URL}/sprints`, { listSprints: nuevaLista });
 
     return sprint;
   } catch (error) {
@@ -81,7 +82,7 @@ export const addTareaToSprintController = async (
       return sprint;
     });
 
-    await axios.put(`${API_BASE_URL}/Sprints`, { listSprints: nuevaLista });
+    await axios.put(`${API_BASE_URL}/sprints`, { listSprints: nuevaLista });
   } catch (error) {
     console.error("❌ Error en addTareaToSprintController:", error);
   }
@@ -90,7 +91,7 @@ export const addTareaToSprintController = async (
 // 🔹 Mover una tarea de un sprint al backlog
 export const moverTareaABacklogController = async (
   idSprint: string,
-  tareaId: number
+  tareaId: string
 ): Promise<void> => {
   try {
     const sprints = await getSprintsController();
@@ -103,16 +104,12 @@ export const moverTareaABacklogController = async (
     if (!tarea) throw new Error("Tarea no encontrada");
 
     // Obtener tareas actuales del backlog
-    const responseBacklog = await axios.get(`${API_BASE_URL}/Backlog`);
+    const responseBacklog = await axios.get(`${API_BASE_URL}/backlog`);
     const tareasBacklog = responseBacklog.data.Tareas || [];
 
-    // Encontrar el ID más alto del backlog y generar un nuevo ID
-    const idsBacklog = tareasBacklog.map((t: any) => Number(t.id));
-    const nuevoId = idsBacklog.length ? (Math.max(...idsBacklog) + 1).toString() : "1"; // Si está vacío, comenzamos con 1
-
-    // Crear la nueva tarea para el backlog con el nuevo ID
+    // Crear la nueva tarea para el backlog (se mantiene el mismo ID)
     const nuevaTareaBacklog = {
-      id: nuevoId,
+      id: tarea.id,
       nombre: tarea.titulo,
       descripcion: tarea.descripcion,
       fechaInicio: new Date().toISOString().split("T")[0],
@@ -120,7 +117,7 @@ export const moverTareaABacklogController = async (
     };
 
     // Agregar la tarea al backlog
-    await axios.put(`${API_BASE_URL}/Backlog`, {
+    await axios.put(`${API_BASE_URL}/backlog`, {
       Tareas: [...tareasBacklog, nuevaTareaBacklog]
     });
 
@@ -134,7 +131,7 @@ export const moverTareaABacklogController = async (
       s.id === idSprint ? sprintActualizado : s
     );
 
-    await axios.put(`${API_BASE_URL}/Sprints`, { listSprints: nuevaListaSprints });
+    await axios.put(`${API_BASE_URL}/sprints`, { listSprints: nuevaListaSprints });
 
   } catch (error) {
     console.error("❌ Error en moverTareaABacklogController:", error);
@@ -148,7 +145,7 @@ export const createTareaSprint = async (
 ) => {
   try {
     // Obtenemos todos los sprints
-    const response = await axios.get<{ listSprints: ISprint[] }>("http://localhost:3000/Sprints");
+    const response = await axios.get<{ listSprints: ISprint[] }>("http://localhost:3000/sprints");
     const sprints = response.data.listSprints;
 
     // Buscamos el sprint donde se agregará la nueva tarea
@@ -157,7 +154,7 @@ export const createTareaSprint = async (
 
     // Creamos la nueva tarea
     const nuevaTarea = {
-      id: (sprint.tareas.length + 1).toString(), // Generamos un ID para la nueva tarea (basado en la cantidad de tareas existentes)
+      id: uuidv4(), // Generamos un ID único usando uuid
       titulo: tareaNueva.titulo,
       descripcion: tareaNueva.descripcion,
       fechaLimite: tareaNueva.fechaLimite || new Date().toISOString().split("T")[0], // Si no se especifica fecha, se pone la fecha actual
@@ -172,7 +169,7 @@ export const createTareaSprint = async (
 
     // Actualizamos la lista de sprints en la base de datos
     const nuevosSprints = sprints.map(s => s.id === idSprint ? sprintActualizado : s);
-    await axios.put("http://localhost:3000/Sprints", {
+    await axios.put("http://localhost:3000/sprints", {
       listSprints: nuevosSprints
     });
 
@@ -182,7 +179,3 @@ export const createTareaSprint = async (
     console.error("❌ Error en createTareaController:", error);
   }
 };
-
-
-
-
